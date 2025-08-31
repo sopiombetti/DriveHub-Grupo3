@@ -6,4 +6,4 @@ Gastón	Monsalvo
 Sofía	Piombetti
 Fiorella	Bueno
 Federico	Gonzalez
-Juan Ignacio	Vicente Priet
+Juan Ignacio	Vicente Prieto
