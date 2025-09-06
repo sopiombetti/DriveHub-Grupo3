@@ -1,0 +1,84 @@
+@startuml diagrama
+
+title Trabajo Práctico - Plataforma Alquiler de Vehículos
+
+abstract class Vehiculo{
+    -matricula
+    -estado
+    -kilometraje
+    -tarifa_base
+    -valor_cargo_extra
+
+    gettersYsetters()
+}
+
+class Compacto extends Vehiculo{
+
+}
+
+class Sedan extends Vehiculo{
+
+}
+class Suv extends Vehiculo{
+
+}
+
+abstract class Estado{
+
+}
+
+class Disponible extends Estado{
+
+}
+
+class Alquilado extends Estado{
+
+}
+
+class Limpieza extends Estado{
+
+}
+
+class Mantenimiento extends Estado{
+
+}
+
+abstract class Persona{
+    -nombre
+    -dni
+
+    gettersYsetters()
+}
+
+class Cliente extends Persona{
+    +solicitarReserva(Vehiculo)
+    +devolverVehiculo()
+}
+
+class Reserva{
+    -km_inicio
+    -km_fin
+    -fecha_inicio
+    -fecha_fin
+
+    gettersYsetters()
+}
+
+class CalculadoraTarifa{
+    +calcularTarifa(Reserva)
+}
+
+class AdminReservas{
+    chequearDisponibilidad()
+    generarReserva()
+}
+
+Vehiculo*-l-Estado
+AdminReservas*-r-Cliente
+Reserva*-r-AdminReservas
+Reserva*--Vehiculo
+Reserva o-l-CalculadoraTarifa
+
+
+
+@enduml
