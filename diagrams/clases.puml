@@ -3,28 +3,30 @@
 title Trabajo Práctico - Plataforma Alquiler de Vehículos
 
 abstract class Vehiculo{
-    -matricula
-    -estado
-    -kilometraje
-    -tarifa_base
-    -valor_cargo_extra
-
-    gettersYsetters()
+    # matricula : string
+    # estado : Estado 
+    # kilometraje: number 
+    # tarifaBase : number
+    # valorCargoExtra: number
+    + calcularExtra(kmTotales: number, diasTotales:number)
+    
+    + gettersYSetters()
 }
 
 class Compacto extends Vehiculo{
+    + calcularExtra(kmTotales: number, diasTotales:number)
 
 }
 
 class Sedan extends Vehiculo{
-
+    + calcularExtra(kmTotales: number, diasTotales:number)
 }
 class Suv extends Vehiculo{
-
+    + calcularExtra(kmTotales: number, diasTotales:number)
 }
 
 abstract class Estado{
-
+    + gettersYSetters()
 }
 
 class Disponible extends Estado{
@@ -44,41 +46,69 @@ class Mantenimiento extends Estado{
 }
 
 abstract class Persona{
-    -nombre
-    -dni
+    - nombre : string
+    - dni : string 
+    - email : string
 
-    gettersYsetters()
+    +gettersYsetters()
 }
 
 class Cliente extends Persona{
-    +solicitarReserva(Vehiculo)
-    +devolverVehiculo()
+    
+    '+ solicitarReserva(vehiculo: Vehiculo)
+    ' Respecto a este método, queda en pausa. Revisar despues.
+    ' solicitud cliente -> evaluacion del admin -> generar reserva 
+
+    + devolverVehiculo(vehiculo: Vehiculo)
+    
 }
 
 class Reserva{
-    -km_inicio
-    -km_fin
-    -fecha_inicio
-    -fecha_fin
+    
+    -cliente : Cliente 
+    -vehiculo : Vehiculo
+    -kmInicio : number
+    -kmFin : number 
+    -fechaInicio : date
+    -fechaFin : date
+    -tieneCargosExtra : boolean
 
-    gettersYsetters()
+    + gettersYsetters()
+    + calcularDiasTotales()
+    + calcularKmTotales()
+
+
 }
 
 class CalculadoraTarifa{
-    +calcularTarifa(Reserva)
+    + calcularTarifa(reserva: Reserva)
 }
 
-class AdminReservas{
-    chequearDisponibilidad()
-    generarReserva()
+'Admin -> Permisos, CRUD 
+'AdminDriveHub -> Sistema de reservas
+
+class Admin {
+    - clientes : Array<Cliente>
+    - reservas : Array<Reserva>
+    - vehiculo : Array<Vehiculo>
+
+    + chequearDisponibilidad()
+    + generarReserva()
+
+    + gettersYsetters()
 }
 
 Vehiculo*-l-Estado
-AdminReservas*-r-Cliente
-Reserva*-r-AdminReservas
+Admin*-r-Cliente
+Reserva*-r-Admin
 Reserva*--Vehiculo
 Reserva o-l-CalculadoraTarifa
 
+note left of CalculadoraTarifa
+    reserva.vehiculo.getTarifaBase() * 
+    reserva.calcularDiasTotales() + 
+    reserva.vehiculo.calcularExtra(reserva.calcularDiasTotales(), reserva.calcularDiasTotales());
+end note
 
 
 @enduml
