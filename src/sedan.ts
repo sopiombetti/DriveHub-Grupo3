@@ -1,6 +1,6 @@
 import Vehiculo from "./vehiculo";
 
-export default class SUV extends Vehiculo{
+export default class Sedan extends Vehiculo{
 
     calcularExtra(kmTotales: number, diasTotales: number): number {
 
