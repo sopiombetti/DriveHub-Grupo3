@@ -1,10 +1,5 @@
 import Vehiculo from "./vehiculo";
-/*
-Tarifa base de $80 por día. 
-Aplica un cargo fijo adicional de $15 por día por
-concepto de seguro y un cargo de $0.25 por cada kilómetro recorrido si se superan
-los 500km en total durante el período de alquiler.
- */
+
 export default class SUV extends Vehiculo{
 
     calcularExtra(kmTotales: number, diasTotales: number): number {
