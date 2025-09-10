@@ -1,4 +1,5 @@
 import Persona from "./persona";
+import Vehiculo from "./vehiculo";
 
 export default class Cliente extends Persona{
 
@@ -11,5 +12,13 @@ export default class Cliente extends Persona{
         super(nombre, dni, email);
     }
 
-    
+    /**
+     * El metodo devolverVehiculo, retorna el kilometraje del auto al ser entregado.
+     * @param vehiculo 
+     * @returns kilometraje
+     */
+
+    public devolverVehiculo(vehiculo: Vehiculo): number{
+        return vehiculo.getKilometraje();
+    }
 }
