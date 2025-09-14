@@ -2,17 +2,8 @@ import Vehiculo from "./vehiculo";
 
 export default class Compacto extends Vehiculo{
 
-    calcularExtra(kmTotales: number, diasTotales: number): number {
+    condicionCargosExtra(kmTotales: number, diasTotales: number): boolean {
         let promedioKilometrosPorDia = kmTotales/diasTotales;
-        let cargo = this.getValorCargoExtra();
-        let cargoExtra = 0;
-        
-        if(promedioKilometrosPorDia>100)
-        {
-            cargoExtra += cargo * kmTotales;
-        }
-        
-        return cargoExtra;
+        return((promedioKilometrosPorDia)>100);
     }
-
 }

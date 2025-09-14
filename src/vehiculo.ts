@@ -61,5 +61,5 @@ export default abstract class Vehiculo {
     public setValorCargoExtra(valorCargoExtra:number):void {
         this.valorCargoExtra = valorCargoExtra;
     }
-    abstract condicionCargosExtra(kmTotales: number, diasTotales:number) : number;
+    abstract condicionCargosExtra(kmTotales: number, diasTotales:number) : boolean;
 }
