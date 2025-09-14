@@ -1,15 +1,18 @@
+import Estado from "./estado";
 import Vehiculo from "./vehiculo";
 
 export default class Sedan extends Vehiculo{
 
-    calcularExtra(kmTotales: number, diasTotales: number): number {
+    constructor(matricula:string, estado:Estado, kilometraje:number){
+        super(matricula, estado, kilometraje);
+        this.tarifaBase = 50;
+        this.valorCargoExtra = 0.20;
+    }
 
-        let cargo = this.getValorCargoExtra();
-        let cargoExtra = 0;
+    condicionCargosExtra(kmTotales: number, diasTotales: number): boolean {
+        /* Recibe parametros km y dias y no los utiliza... */
+        return true;
         
-        cargoExtra += cargo * kmTotales;
-        
-        return cargoExtra;
     }
 
 }
