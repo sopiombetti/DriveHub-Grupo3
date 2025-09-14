@@ -15,6 +15,14 @@ export default class Reserva{
         this.fechaFin = fechaFin;
     }
 
+    public getVehiculo(): Vehiculo{
+        return this.vehiculo;
+    }
+
+    public getCliente(): Cliente{
+        return this.cliente;
+    }
+
     public getFechaInicio(): Date{
         return this.fechaInicio;
     }
