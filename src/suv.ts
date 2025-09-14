@@ -1,20 +1,18 @@
+import Estado from "./estado";
 import Vehiculo from "./vehiculo";
 
 export default class SUV extends Vehiculo{
 
-    calcularExtra(kmTotales: number, diasTotales: number): number {
+    constructor(matricula:string, estado:Estado, kilometraje:number){
+        super(matricula, estado, kilometraje);
+        this.tarifaBase = 80;
+        this.valorCargoExtra = 0.25;
+        this.valorCargoExtraSeguro = 15;
+    }
 
-        const cargoFijoPorSeguro = 15;
-        let cargo = this.getValorCargoExtra();
-        let cargoExtra = 0;
-        
-        cargoExtra += cargoFijoPorSeguro * diasTotales;
+    condicionCargosExtra(kmTotales: number, diasTotales: number): boolean{
 
-        if (kmTotales>500){
-            cargoExtra += (kmTotales * cargo);
-        }
-        
-        return cargoExtra;
+        return (kmTotales>500);
     }
 
 }
