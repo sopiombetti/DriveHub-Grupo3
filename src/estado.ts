@@ -1,4 +1,4 @@
-abstract class Estado {
+export default abstract class Estado {
     protected tipoEstado: string;
 
     constructor(tipoEstado: string) {
