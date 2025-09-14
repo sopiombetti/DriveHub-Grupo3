@@ -11,7 +11,7 @@ export default class SUV extends Vehiculo{
     }
 
     condicionCargosExtra(kmTotales: number, diasTotales: number): boolean{
-
+        /* Recibe parametro dias pero no lo uiliza... */ 
         return (kmTotales>500);
     }
 
