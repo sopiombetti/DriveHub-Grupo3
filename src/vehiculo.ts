@@ -7,13 +7,15 @@ export default abstract class Vehiculo {
     protected kilometraje: number; 
     protected tarifaBase : number;
     protected valorCargoExtra: number;
+    protected valorCargoExtraSeguro: number;
 
-    constructor(matricula:string, estado:Estado, kilometraje:number,tarifaBase:number, valorCargoExtra:number){
+    constructor(matricula:string, estado:Estado, kilometraje:number){
         this.matricula = matricula;
         this.estado = estado;
         this.kilometraje = kilometraje;
-        this.tarifaBase = tarifaBase;
-        this.valorCargoExtra = valorCargoExtra;
+        this.tarifaBase = 0;
+        this.valorCargoExtra = 0;
+        this.valorCargoExtraSeguro = 0;
     }
     
     public getMatricula():string{
@@ -41,6 +43,9 @@ export default abstract class Vehiculo {
     public getValorCargoExtra():number{
         return this.valorCargoExtra;
     }
+    public getValorCargoExtraSeguro(): number{
+        return this.valorCargoExtraSeguro;
+    }
     public setMatricula(matricula:string):void {
         this.matricula = matricula;
     }
@@ -56,5 +61,5 @@ export default abstract class Vehiculo {
     public setValorCargoExtra(valorCargoExtra:number):void {
         this.valorCargoExtra = valorCargoExtra;
     }
-    abstract calcularExtra(kmTotales: number, diasTotales:number) : number;
+    abstract condicionCargosExtra(kmTotales: number, diasTotales:number) : boolean;
 }

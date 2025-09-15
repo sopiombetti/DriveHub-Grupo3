@@ -7,12 +7,22 @@ export default class Reserva{
     private vehiculo: Vehiculo;
     private fechaInicio: Date;
     private fechaFin: Date;
+    private kmInicial: number;
 
     constructor(cliente: Cliente, vehiculo: Vehiculo, fechaInicio: Date, fechaFin: Date){
         this.cliente = cliente;
         this.vehiculo = vehiculo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+        this.kmInicial = this.vehiculo.getKilometraje();
+    }
+
+    public getVehiculo(): Vehiculo{
+        return this.vehiculo;
+    }
+
+    public getCliente(): Cliente{
+        return this.cliente;
     }
 
     public getFechaInicio(): Date{
@@ -25,7 +35,7 @@ export default class Reserva{
 
     public calcularKmTotales(): number{
         let kmTotal = 0;
-        kmTotal = this.cliente.devolverVehiculo(this.vehiculo) - this.vehiculo.getKilometraje();
+        kmTotal = this.cliente.devolverVehiculo(this.vehiculo) - this.kmInicial;
         return kmTotal;
     }
 
