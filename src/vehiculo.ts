@@ -48,8 +48,8 @@ export default abstract class Vehiculo {
         - REVISAR
         (una vez corregido documentar)
     */
-    public getEstado():Estado{
-        return this.estado;
+    public getEstado():string{
+        return this.estado.getTipoEstado(); 
     }
 
     /**
