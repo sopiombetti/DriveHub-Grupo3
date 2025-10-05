@@ -1,5 +1,7 @@
 import Persona from "./persona";
 import Vehiculo from "./vehiculo";
+import Reserva from "./reserva";
+import SolicitudReserva from "./solicitudReserva";
 
 /**
  * Clase que representa un cliente del sistema de alquiler de vehículos.
@@ -30,5 +32,10 @@ export default class Cliente extends Persona{
      */
     public devolverVehiculo(vehiculo: Vehiculo): number{
         return vehiculo.getKilometraje();
+    }
+
+    // En este momento el cliente le indica verbalmente al admin cual vehiculo quiere y en que fechas.
+    public generarSolicitud(vehiculo:Vehiculo, fechaInicio:Date, fechaFin:Date) {
+        const nuevaSolicitud = new SolicitudReserva(this,vehiculo, fechaInicio, fechaFin);
     }
 }

@@ -1,11 +1,12 @@
 import Vehiculo from "./vehiculo";
 import Reserva from "./reserva";
 import Cliente from "./cliente";
+import SolicitudReserva from "./solicitudReserva";
 /**
 Administra clientes, vehículos y reservas.  
 Permite verificar disponibilidad y gestionar las listas.
 */
-export default class Admin extends Persona {
+export default class Admin {
 
     private clientes : Array<Cliente>;
     private reservas: Array<Reserva>;
@@ -16,7 +17,6 @@ export default class Admin extends Persona {
     * Inicializa el administrador con colecciones vacías de clientes, reservas y vehículos.
     */
     constructor() {
-        super();
         this.clientes = [];
         this.reservas = [];
         this.vehiculos = [];
@@ -43,10 +43,11 @@ export default class Admin extends Persona {
     * @returns void
     */
 
-    public generarReserva (cliente: Cliente, vehiculo: Vehiculo) {
-        // codigo para generar nueva reserva, a charlar todavia.
-        var nuevaReserva = new Reserva();
-
+    public generarReserva (solicitudReserva: SolicitudReserva) {
+        if (this.chequearDisponibilidad(solicitudReserva.getVehiculo())){
+            let nuevaReserva = new Reserva(solicitudReserva.getCliente(), solicitudReserva.getVehiculo(), solicitudReserva.getFechaInicio(), solicitudReserva.getFechaFin());
+            this.reservas.push(nuevaReserva);
+        }
     }
 
     /**
@@ -73,15 +74,37 @@ export default class Admin extends Persona {
         return this.vehiculos;
     }
 
-    public setClientes() {
-        // Nota de Juani: creo que en vez de setter, deberiamos tener un metodo para agregar un elemento al array y otro para eliminarlo.
+    public agregarCliente(cliente: Cliente) {
+        if (! cliente){
+            throw new Error (`Cliente nulo o no existente`)
+        }
+        if(this.clientes.find((cli) => cli.getDni() == cliente.getDni()) ) {
+            throw new Error (`Crear clase error cliente ya esta en array`)
+        }
+        this.clientes.push(cliente)
     }
-    public setReservas() {
-        // Nota de Juani: creo que en vez de setter, deberiamos tener un metodo para agregar un elemento al array y otro para eliminarlo.
 
+    public quitarCliente (cliente: Cliente) {
+        if( this.clientes.find((cli) => cli.getDni() == cliente.getDni())) {
+            let nuevoArray = this.clientes.filter((cli) => cli.getDni() !== cliente.getDni() );
+            this.clientes = nuevoArray;
+        }
     }
-    public setVehiculos() {
-        // Nota de Juani: creo que en vez de setter, deberiamos tener un metodo para agregar un elemento al array y otro para eliminarlo.
+    
+    public agregarVehiculo(vehiculo: Vehiculo) {
+        if (! vehiculo){
+            throw new Error (`Cliente nulo o no existente`)
+        }
+        if(this.vehiculos.find((cli) => cli.getMatricula() == vehiculo.getMatricula()) ) {
+            throw new Error (`Crear clase error cliente ya esta en array`)
+        }
+        this.vehiculos.push(vehiculo)
+    }
 
+    public quitarVehiculo (vehiculo: Vehiculo) {
+        if( this.vehiculos.find((cli) => cli.getMatricula() == vehiculo.getMatricula())) {
+            let nuevoArray = this.vehiculos.filter((cli) => cli.getMatricula() !== vehiculo.getMatricula() );
+            this.vehiculos = nuevoArray;
+        }
     }
 }
