@@ -1,6 +1,7 @@
 import Vehiculo from "./vehiculo";
 import Reserva from "./reserva";
 import Cliente from "./cliente";
+import SolicitudReserva from "./solicitudReserva";
 /**
 Administra clientes, vehículos y reservas.  
 Permite verificar disponibilidad y gestionar las listas.
@@ -42,12 +43,11 @@ export default class Admin {
     * @returns void
     */
 
-    public generarReserva (cliente: Cliente, vehiculo: Vehiculo, fechaInicio: Date, fechaFin: Date) {
-        if (this.chequearDisponibilidad(vehiculo)){
-            let nuevaReserva = new Reserva(cliente, vehiculo, fechaInicio, fechaFin);
+    public generarReserva (solicitudReserva: SolicitudReserva) {
+        if (this.chequearDisponibilidad(solicitudReserva.getVehiculo())){
+            let nuevaReserva = new Reserva(solicitudReserva.getCliente(), solicitudReserva.getVehiculo(), solicitudReserva.getFechaInicio(), solicitudReserva.getFechaFin());
+            this.reservas.push(nuevaReserva);
         }
-        
-
     }
 
     /**
@@ -86,15 +86,11 @@ export default class Admin {
 
     public quitarCliente (cliente: Cliente) {
         if( this.clientes.find((cli) => cli.getDni() == cliente.getDni())) {
-            let nuevoArray = this.clientes.filter((cli) => cli.getDni() != cliente.getDni() );
+            let nuevoArray = this.clientes.filter((cli) => cli.getDni() !== cliente.getDni() );
             this.clientes = nuevoArray;
         }
     }
     
-    public setReservas() {
-        // Nota de Juani: creo que en vez de setter, deberiamos tener un metodo para agregar un elemento al array y otro para eliminarlo.
-
-    }
     public agregarVehiculo(vehiculo: Vehiculo) {
         if (! vehiculo){
             throw new Error (`Cliente nulo o no existente`)
@@ -107,7 +103,7 @@ export default class Admin {
 
     public quitarVehiculo (vehiculo: Vehiculo) {
         if( this.vehiculos.find((cli) => cli.getMatricula() == vehiculo.getMatricula())) {
-            let nuevoArray = this.vehiculos.filter((cli) => cli.getMatricula() != vehiculo.getMatricula() );
+            let nuevoArray = this.vehiculos.filter((cli) => cli.getMatricula() !== vehiculo.getMatricula() );
             this.vehiculos = nuevoArray;
         }
     }
