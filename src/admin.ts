@@ -42,9 +42,11 @@ export default class Admin {
     * @returns void
     */
 
-    public generarReserva (cliente: Cliente, vehiculo: Vehiculo) {
-        // codigo para generar nueva reserva, a charlar todavia.
-        var nuevaReserva = new Reserva();
+    public generarReserva (cliente: Cliente, vehiculo: Vehiculo, fechaInicio: Date, fechaFin: Date) {
+        if (this.chequearDisponibilidad(vehiculo)){
+            let nuevaReserva = new Reserva(cliente, vehiculo, fechaInicio, fechaFin);
+        }
+        
 
     }
 
@@ -93,8 +95,20 @@ export default class Admin {
         // Nota de Juani: creo que en vez de setter, deberiamos tener un metodo para agregar un elemento al array y otro para eliminarlo.
 
     }
-    public setVehiculos() {
-        // Nota de Juani: creo que en vez de setter, deberiamos tener un metodo para agregar un elemento al array y otro para eliminarlo.
+    public agregarVehiculo(vehiculo: Vehiculo) {
+        if (! vehiculo){
+            throw new Error (`Cliente nulo o no existente`)
+        }
+        if(this.vehiculos.find((cli) => cli.getMatricula() == vehiculo.getMatricula()) ) {
+            throw new Error (`Crear clase error cliente ya esta en array`)
+        }
+        this.vehiculos.push(vehiculo)
+    }
 
+    public quitarVehiculo (vehiculo: Vehiculo) {
+        if( this.vehiculos.find((cli) => cli.getMatricula() == vehiculo.getMatricula())) {
+            let nuevoArray = this.vehiculos.filter((cli) => cli.getMatricula() != vehiculo.getMatricula() );
+            this.vehiculos = nuevoArray;
+        }
     }
 }
