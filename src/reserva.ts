@@ -1,5 +1,5 @@
 import Cliente from "./cliente";
-import Vehiculo from "./vehiculo";
+import Vehiculo from "./vehiculos/vehiculo";
 
 /**
 * Representa la asignación de un vehículo a un cliente por un período de tiempo.

@@ -1,4 +1,4 @@
-import Estado from "./estado";
+import Estado from "../estados/estado";
 import Vehiculo from "./vehiculo";
 
 export default class SUV extends Vehiculo{

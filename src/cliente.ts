@@ -1,5 +1,5 @@
 import Persona from "./persona";
-import Vehiculo from "./vehiculo";
+import Vehiculo from "./vehiculos/vehiculo";
 import Reserva from "./reserva";
 import SolicitudReserva from "./solicitudReserva";
 

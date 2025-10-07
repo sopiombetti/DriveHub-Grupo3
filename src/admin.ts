@@ -1,4 +1,4 @@
-import Vehiculo from "./vehiculo";
+import Vehiculo from "./vehiculos/vehiculo";
 import Reserva from "./reserva";
 import Cliente from "./cliente";
 import SolicitudReserva from "./solicitudReserva";

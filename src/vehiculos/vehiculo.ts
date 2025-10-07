@@ -1,4 +1,4 @@
-import Estado from "./estado";
+import Estado from "../estados/estado";
 
 /**
  * Clase abstracta de un vehiculo
