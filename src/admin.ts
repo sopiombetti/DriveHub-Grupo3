@@ -25,8 +25,8 @@ export default class Admin {
     /**
     * Verifica si un vehículo está disponible.
     * 
-    * @param Vehiculo Vehículo a evaluar.
-    * @returns boolean
+    * @param {Vehiculo} Vehículo a evaluar.
+    * @returns {boolean}
     */
     public chequearDisponibilidad(vehiculo: Vehiculo): boolean {
         let disponibilidad: boolean = true;
@@ -38,12 +38,12 @@ export default class Admin {
 
     /**
     * Genera una reserva para un cliente y un vehículo.
-    * @param Cliente Cliente que solicita la reserva.
-    * @param Vehiculo Vehículo a reservar.
+    * @param {Cliente} Cliente que solicita la reserva.
+    * @param {Vehiculo} Vehículo a reservar.
     * @returns void
     */
 
-    public generarReserva (solicitudReserva: SolicitudReserva) {
+    public generarReserva (solicitudReserva: SolicitudReserva): void {
         if (this.chequearDisponibilidad(solicitudReserva.getVehiculo())){
             let nuevaReserva = new Reserva(solicitudReserva.getCliente(), solicitudReserva.getVehiculo(), solicitudReserva.getFechaInicio(), solicitudReserva.getFechaFin());
             this.reservas.push(nuevaReserva);
@@ -52,7 +52,7 @@ export default class Admin {
 
     /**
     * Devuelve la lista de clientes.
-    * @returns Cliente[]
+    * @returns {Array<Cliente>}
     */
     public getClientes (): Array<Cliente> {
         return this.clientes;
@@ -60,7 +60,7 @@ export default class Admin {
 
     /**
     * Devuelve la lista de reservas.
-    * @returns Reserva[]
+    * @returns {Array<Reserva>}
     */
     public getReservas(): Array<Reserva> {
         return this.reservas;
@@ -68,13 +68,17 @@ export default class Admin {
 
     /**
     * Devuelve la lista de vehículos.
-    * @returns Vehiculo[]
+    * @returns {Array<Vehiculo>}
     */
     public getVehiculos (): Array<Vehiculo> {
         return this.vehiculos;
     }
 
-    public agregarCliente(cliente: Cliente) {
+    /**
+    * Agrega un cliente nuevo a la lista de clientes
+    * @param {Cliente} Cliente Recibe el cliente que hizo uno reserva.
+    */
+    public agregarCliente(cliente: Cliente): void {
         if (! cliente){
             throw new Error (`Cliente nulo o no existente`)
         }
@@ -84,24 +88,36 @@ export default class Admin {
         this.clientes.push(cliente)
     }
 
-    public quitarCliente (cliente: Cliente) {
+    /**
+    * Elimina un cliente de la lista de clientes
+    * @param {Cliente} Cliente Recibe el cliente a eliminar.
+    */
+    public quitarCliente (cliente: Cliente): void {
         if( this.clientes.find((cli) => cli.getDni() == cliente.getDni())) {
             let nuevoArray = this.clientes.filter((cli) => cli.getDni() !== cliente.getDni() );
             this.clientes = nuevoArray;
         }
     }
     
-    public agregarVehiculo(vehiculo: Vehiculo) {
+    /**
+    * Agrega un nuevo Vehiculo a la lista de vehiculos
+    * @param {Vehiculo} Vehiculo Recibe el vehiculo a agregar.
+    */
+    public agregarVehiculo(vehiculo: Vehiculo): void {
         if (! vehiculo){
-            throw new Error (`Cliente nulo o no existente`)
+            throw new Error (`Vehiculo nulo o no existente`)
         }
         if(this.vehiculos.find((cli) => cli.getMatricula() == vehiculo.getMatricula()) ) {
-            throw new Error (`Crear clase error cliente ya esta en array`)
+            throw new Error (`Crear clase error vehiculo ya esta en array`)
         }
         this.vehiculos.push(vehiculo)
     }
-
-    public quitarVehiculo (vehiculo: Vehiculo) {
+    
+    /**
+    * Elimina un Vehiculo de la lista de vehiculos
+    * @param {Vehiculo} Vehiculo Recibe el vehiculo a eliminar.
+    */
+    public quitarVehiculo (vehiculo: Vehiculo): void {
         if( this.vehiculos.find((cli) => cli.getMatricula() == vehiculo.getMatricula())) {
             let nuevoArray = this.vehiculos.filter((cli) => cli.getMatricula() !== vehiculo.getMatricula() );
             this.vehiculos = nuevoArray;
