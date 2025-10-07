@@ -17,10 +17,10 @@ export default class Reserva{
         * Crea una nueva reserva con cliente, vehículo y fechas de inicio y fin.
         * Almacena el kilometraje inicial del vehículo al momento de la reserva.
         * @constructor
-        * @param cliente Cliente que realiza la reserva.
-        * @param vehiculo Vehículo que será reservado.
-        * @param fechaInicio Fecha en que comienza la reserva.
-        * @param fechaFin Fecha en que finaliza la reserva.
+        * @param {Cliente} Cliente que realiza la reserva.
+        * @param {Vehiculo} Vehículo que será reservado.
+        * @param {Date} fechaInicio en que comienza la reserva.
+        * @param {Date} fechaFin en que finaliza la reserva.
     */
     constructor(cliente: Cliente, vehiculo: Vehiculo, fechaInicio: Date, fechaFin: Date){
         this.cliente = cliente;
@@ -33,7 +33,7 @@ export default class Reserva{
     /** 
     * Devuelve el vehículo reservado.
     * 
-    * @returns Vehiculo
+    * @returns {Vehiculo} Vehiculo
     */
     public getVehiculo(): Vehiculo{
         return this.vehiculo;
@@ -42,7 +42,7 @@ export default class Reserva{
     /** 
     * Devuelve el cliente que realizó la reserva.
     * 
-    * @returns Cliente
+    * @returns {Cliente} Cliente
     */
     public getCliente(): Cliente{
         return this.cliente;
@@ -51,7 +51,7 @@ export default class Reserva{
     /**
     * Devuelve la fecha de inicio de la reserva.
     * 
-    * @returns Date
+    * @returns {Date}
     */
     public getFechaInicio(): Date{
         return this.fechaInicio;
@@ -60,7 +60,7 @@ export default class Reserva{
     /**
     * Devuelve la fecha de finalización de la reserva.
     * 
-    * @returns Date
+    * @returns {Date} 
     */
     public getFechaFin(): Date{
         return this.fechaFin;
@@ -69,7 +69,7 @@ export default class Reserva{
     /**
     * Calcula los kilómetros recorridos durante la reserva.
     * 
-    * @returns number
+    * @returns {number}
     */
     public calcularKmTotales(): number{
         let kmTotal = 0;
@@ -80,7 +80,7 @@ export default class Reserva{
     /**
     * Calcula el número total de días de la reserva.
     * 
-    * @returns number
+    * @returns {number} 
     */
     public calcularDiasTotales(): number{
         let dias = 0;
