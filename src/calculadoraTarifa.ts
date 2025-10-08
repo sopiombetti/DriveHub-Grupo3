@@ -5,7 +5,7 @@ Clase que calcula la tarifa que el cliente paga por la reserva.
 export default class CalculadoraTarifa {
 
 	/**
-     * metodo estatico que Calcula la tarifa final de una reserva
+     * metodo estatico que calcula la tarifa final de una reserva en base a los kilometros recorridos, los dias y los cargos del tipo de vehiculo.
      * @param {Reserva} reserva a tarifar
 	 * @returns {number} - monto a pagar por el cliente
      */
