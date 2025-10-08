@@ -20,6 +20,13 @@ export default class SUV extends Vehiculo{
         this.valorCargoExtraSeguro = 15;
     }
 
+    /**
+     * metodo para evular si corresponden o no aplicar cargos extra
+     * @param {number} kmTotales - kilometros recorridos durante la reserva
+     * @param {number} diasTotales - dias que dura la reserva
+
+	 * @returns {boolean}
+     */
     condicionCargosExtra(kmTotales: number, diasTotales: number): boolean{
         /* Recibe parametro dias pero no lo uiliza... */ 
         return (kmTotales>500);
