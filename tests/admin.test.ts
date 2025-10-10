@@ -1,4 +1,5 @@
 import Admin from '../src/admin';
+import Cliente from '../src/cliente';
 import Estado from '../src/estados/estado';
 import Vehiculo from '../src/vehiculos/vehiculo';
 
@@ -12,6 +13,10 @@ class MockVehiculo extends Vehiculo{
     condicionCargosExtra(kmTotales: number, diasTotales: number): boolean {
         return true;
     }
+}
+
+class MockCliente extends Cliente{
+
 }
 
 describe('Tests clase Admin', () => {
@@ -34,4 +39,17 @@ describe('Tests clase Admin', () => {
         const resultado = admin.chequearDisponibilidad(vehiculoDisponible);
         expect(resultado).toBe(false);
     });  
+
+    it('Agregar un cliente nuevo al array', () => {
+        const cliente = new MockCliente('Sofia', '123', '@mail');
+        admin.agregarCliente(cliente);
+        expect(admin['clientes']).toContain(cliente);
+    });
+
+    it('Cliente ya existe en el array', () => {
+        const cliente1 = new MockCliente('Sofia', '123', '@mail');
+        const cliente2 = new MockCliente('Sofia', '123', '@mail');
+        admin.agregarCliente(cliente1);
+        expect(() => admin.agregarCliente(cliente2)).toThrow('Crear clase error cliente ya esta en array');
+    });
 });
