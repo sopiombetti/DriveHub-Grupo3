@@ -16,7 +16,6 @@ class MockVehiculo extends Vehiculo{
 }
 
 class MockCliente extends Cliente{
-
 }
 
 describe('Tests clase Admin', () => {
@@ -51,5 +50,20 @@ describe('Tests clase Admin', () => {
         const cliente2 = new MockCliente('Sofia', '123', '@mail');
         admin.agregarCliente(cliente1);
         expect(() => admin.agregarCliente(cliente2)).toThrow('Crear clase error cliente ya esta en array');
+    });
+
+    it('Agregar un vehiculo nuevo al array', () => {
+        const estado = new MockEstado('Disponible')
+        const vehiculo = new MockVehiculo("000", estado, 10);
+        admin.agregarVehiculo(vehiculo);
+        expect(admin['vehiculos']).toContain(vehiculo);
+    });
+
+    it('Vehiculo ya existe en el array', () => {
+        const estado = new MockEstado('Disponible')
+        const vehiculo1 = new MockVehiculo("000", estado, 10);
+        const vehiculo2 = new MockVehiculo("000", estado, 10);
+        admin.agregarVehiculo(vehiculo1);
+        expect(() => admin.agregarVehiculo(vehiculo2)).toThrow('Crear clase error vehiculo ya esta en array');
     });
 });
