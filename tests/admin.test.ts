@@ -48,8 +48,20 @@ describe('Tests clase Admin', () => {
     it('Cliente ya existe en el array', () => {
         const cliente1 = new MockCliente('Sofia', '123', '@mail');
         const cliente2 = new MockCliente('Sofia', '123', '@mail');
+
+        // const clientex: Cliente = { 
+        //     getDni: jest.fn().mockReturnValue('123')
+        // } as any;
+
         admin.agregarCliente(cliente1);
-        expect(() => admin.agregarCliente(cliente2)).toThrow('Crear clase error cliente ya esta en array');
+        expect(() => admin.agregarCliente(cliente2)).toThrow('El cliente ya se encuentra en el array');
+    });
+
+    it('Quitar un cliente del array', () => {
+        const cliente = new MockCliente('Sofia', '123', '@mail');
+        admin.agregarCliente(cliente);
+        admin.quitarCliente(cliente);
+        expect(admin['clientes']).not.toContain(cliente);
     });
 
     it('Agregar un vehiculo nuevo al array', () => {
@@ -64,6 +76,14 @@ describe('Tests clase Admin', () => {
         const vehiculo1 = new MockVehiculo("000", estado, 10);
         const vehiculo2 = new MockVehiculo("000", estado, 10);
         admin.agregarVehiculo(vehiculo1);
-        expect(() => admin.agregarVehiculo(vehiculo2)).toThrow('Crear clase error vehiculo ya esta en array');
+        expect(() => admin.agregarVehiculo(vehiculo2)).toThrow('El vehiculo ya se encuentra en el array');
+    });
+
+    it('Quitar un vehiculo del array', () => {
+        const estado = new MockEstado('Disponible')
+        const vehiculo = new MockVehiculo("000", estado, 10);
+        admin.agregarVehiculo(vehiculo);
+        admin.quitarVehiculo(vehiculo);
+        expect(admin['vehiculos']).not.toContain(vehiculo);
     });
 });
