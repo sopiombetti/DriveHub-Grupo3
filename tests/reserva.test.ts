@@ -1,0 +1,83 @@
+import Reserva from '../src/reserva';
+import Cliente from '../src/cliente'; 
+import Vehiculo from '../src/vehiculos/vehiculo';
+import Estado from '../src/estados/estado';
+
+class MockVehiculo extends Vehiculo {
+    constructor() {
+        super('ABC123', new MockEstado(), 10000); 
+    }
+
+    public condicionCargosExtra(kmTotales: number, diasTotales: number): boolean {
+        return false; 
+    }
+}
+
+class MockEstado extends Estado {
+    constructor() {
+        super('Disponible'); 
+    }
+}
+
+class MockCliente extends Cliente {
+    constructor() {
+        
+        super('12345678', 'Juan Perez', 'juan@example.com');
+    }
+    
+    public devolverVehiculo(vehiculo: Vehiculo): number {
+        return 12000;
+    }
+}
+
+describe('Test Clase Reserva', () => {
+    
+    let mockCliente: MockCliente;
+    let mockVehiculo: MockVehiculo;
+    let fechaInicio: Date;
+    let fechaFin: Date;
+    let reserva: Reserva;
+        
+    beforeEach(() => {
+        mockCliente = new MockCliente();
+        mockVehiculo = new MockVehiculo();
+        fechaInicio = new Date('2025-10-20');
+        fechaFin = new Date('2025-10-25');
+
+        reserva = new Reserva(mockCliente, mockVehiculo, fechaInicio, fechaFin);
+    });  
+        
+    it('debería ser una instancia de Reserva', () => {
+        
+        expect(reserva).toBeInstanceOf(Reserva);
+    }); 
+
+    it('debería inicializar las propiedades correctamente', () => {
+         
+        expect(reserva.getCliente()).toBe(mockCliente);
+        expect(reserva.getVehiculo()).toBe(mockVehiculo);
+        expect(reserva.getFechaInicio()).toBe(fechaInicio);
+        expect(reserva.getFechaFin()).toBe(fechaFin);
+    });
+
+    it('debería calcular correctamente el número de días totales de la reserva', () => {
+       
+        const diasTotales = reserva.calcularDiasTotales();
+        const diasEsperados = 5;
+    
+        expect(diasTotales).toBe(diasEsperados);
+
+    });
+
+    it('debería calcular correctamente los kilómetros totales recorridos', () => {
+        
+        const kmTotalesCalculados = reserva.calcularKmTotales();
+
+        const kmInicialEsperado = 10000;
+        const kmFinalSimulado = 12000;
+        const kmTotalesEsperados = kmFinalSimulado - kmInicialEsperado;
+        expect(kmTotalesCalculados).toBe(kmTotalesEsperados);
+
+    });
+
+});
