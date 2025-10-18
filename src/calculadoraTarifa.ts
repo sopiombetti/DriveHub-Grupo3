@@ -56,7 +56,7 @@ export default class CalculadoraTarifa {
 		if ([5, 7, 8].includes(mes)) {
 			return 0.9;
 		}
-
+		
 		return 0;
 	}
 }
