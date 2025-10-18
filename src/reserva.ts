@@ -1,5 +1,7 @@
 import Cliente from "./cliente";
 import Vehiculo from "./vehiculos/vehiculo";
+import moment from "moment";
+
 
 /**
 * Representa la asignación de un vehículo a un cliente por un período de tiempo.
@@ -58,12 +60,28 @@ export default class Reserva{
     }
 
     /**
-    * Devuelve la fecha de finalización de la reserva.
+    * Devuelve la fecha de finalizacion de la reserva.
     * 
     * @returns {Date} 
     */
     public getFechaFin(): Date{
         return this.fechaFin;
+    }
+    /**
+    * Devuelve la fecha de inicio de la reserva formateada a string.
+    * 
+    * @returns {String} 
+    */
+    public getFechaInicioFormateada(): string {
+        return moment(this.fechaInicio).format("DD/MM/YYYY");
+    }
+/**
+    * Devuelve la fecha de finalizacion de la reserva formateada a string.
+    * 
+    * @returns {String} 
+    */
+    public getFechaFinFormateada(): string {
+        return moment(this.fechaFin).format("DD/MM/YYYY");
     }
 
     /**
@@ -82,11 +100,13 @@ export default class Reserva{
     * 
     * @returns {number} 
     */
-    public calcularDiasTotales(): number{
-        let dias = 0;
-        const diferenciaMilisegundos = Math.abs(this.fechaFin.getTime() - this.fechaInicio.getTime()); // Obtiene la diferencia en milisegundos
-        const milisegundosEnUnDia = 1000 * 60 * 60 * 24; // 1 segundo * 60 segundos * 60 minutos * 24 horas
-        dias = diferenciaMilisegundos / milisegundosEnUnDia;
-        return dias;
-    }
+    public calcularDiasTotales(): number {
+    const inicio = moment(this.fechaInicio);
+    const fin = moment(this.fechaFin);
+
+    const dias = fin.diff(inicio, "days");
+
+    return dias;
+}
+
 }
