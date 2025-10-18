@@ -1,4 +1,5 @@
 import Reserva from "./reserva";
+import moment from "moment";
 /**
 Clase que calcula la tarifa que el cliente paga por la reserva.  
 */
@@ -27,9 +28,6 @@ export default class CalculadoraTarifa {
 }
 
 
-
-
-// import moment from "moment";
 
 // /**
 //  * Retorna la temporada correspondiente a una fecha.
