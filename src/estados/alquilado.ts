@@ -1,4 +1,5 @@
 import Vehiculo from "../vehiculos/vehiculo";
+import Disponible from "./disponible";
 import IEstado from "./estado";
 export default class Alquilado implements IEstado {
   constructor(private vehiculo : Vehiculo){}
