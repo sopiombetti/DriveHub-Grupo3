@@ -1,3 +1,4 @@
+import Disponible from "../estados/disponible";
 import Estado from "../estados/estado";
 
 /**
@@ -21,9 +22,9 @@ export default abstract class Vehiculo {
      * 
      * Las tarifas y cargos extras se inicializan en 0
      */
-    constructor(matricula:string, estado:Estado, kilometraje:number){
+    constructor(matricula:string, kilometraje:number){
         this.matricula = matricula;
-        this.estado = estado;
+        this.estado = new Disponible();
         this.kilometraje = kilometraje;
         this.tarifaBase = 0;
         this.valorCargoExtra = 0;
