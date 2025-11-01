@@ -36,7 +36,7 @@ export default class CalculadoraTarifa {
 
 	/**
 	 * Retorna la temporada correspondiente a una fecha.
-	 * @param fecha - fecha a analizar
+	 * @param {Date} fecha - fecha a analizar
 	 * @returns 1 (alta), 2 (media), 3 (baja)
 	 */
 	public calcularTemporada(fecha: Date): number {

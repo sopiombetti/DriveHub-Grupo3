@@ -23,7 +23,6 @@ export default class Disponible implements IEstado {
         throw new Error();
     }
 
-
     public puedeSerAlquilado(){
         return true;
     }
