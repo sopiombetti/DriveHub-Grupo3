@@ -29,11 +29,7 @@ export default class Admin {
     * @returns {boolean}
     */
     public chequearDisponibilidad(vehiculo: Vehiculo):boolean {
-        let disponibilidad: boolean = true;
-        if (vehiculo.getEstado() !== "Disponible") {
-            disponibilidad = false;
-        }
-        return disponibilidad;
+        return vehiculo.getEstado().puedeSerAlquilado();
     }
 
     /**

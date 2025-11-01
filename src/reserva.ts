@@ -19,8 +19,8 @@ export default class Reserva{
         * Crea una nueva reserva con cliente, vehículo y fechas de inicio y fin.
         * Almacena el kilometraje inicial del vehículo al momento de la reserva.
         * @constructor
-        * @param {Cliente} Cliente que realiza la reserva.
-        * @param {Vehiculo} Vehículo que será reservado.
+        * @param {Cliente} cliente que realiza la reserva.
+        * @param {Vehiculo} vehículo que será reservado.
         * @param {Date} fechaInicio en que comienza la reserva.
         * @param {Date} fechaFin en que finaliza la reserva.
     */
