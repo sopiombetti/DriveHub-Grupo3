@@ -1,15 +1,7 @@
-export default abstract class Estado {
-    protected tipoEstado: string;
-
-    constructor(tipoEstado: string) {
-        this.tipoEstado = tipoEstado;
-    }
-
-    public getTipoEstado(): string {
-        return this.tipoEstado;
-    }
-
-    public setTipoEstado(tipoEstado: string): void {
-        this.tipoEstado = tipoEstado;
-    }
+export default interface Estado {
+    alquilar(): void;
+    ponerEnMantenimiento():void;
+    ponerEnLimpieza(): void;
+    ponerDisponible(): void;
+    puedeSerAlquilado(): boolean;
 }
