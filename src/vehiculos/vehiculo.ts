@@ -1,5 +1,5 @@
 import Disponible from "../estados/disponible";
-import Estado from "../estados/estado";
+import IEstado from "../estados/estado";
 
 /**
  * Clase abstracta de un vehiculo
@@ -8,7 +8,7 @@ import Estado from "../estados/estado";
 export default abstract class Vehiculo {
 
     protected matricula : string;
-    protected estado : Estado ;
+    protected estado : IEstado ;
     protected kilometraje: number; 
     protected tarifaBase : number;
     protected valorCargoExtra: number;
@@ -17,14 +17,14 @@ export default abstract class Vehiculo {
     /**
      * constructor para instanciar objetos de las clases derivadas de vehiculo
      * @param {string} matricula - matrícula única del vehiculo
-     * @param {Estado} estado - determina el estado del vehiculo 
+     * @param {IEstado} estado - determina el estado del vehiculo 
      * @param {number} kilometraje - kilometraje del vehiculo
      * 
      * Las tarifas y cargos extras se inicializan en 0
      */
     constructor(matricula:string, kilometraje:number){
         this.matricula = matricula;
-        this.estado = new Disponible();
+        this.estado = new Disponible(this);
         this.kilometraje = kilometraje;
         this.tarifaBase = 0;
         this.valorCargoExtra = 0;
@@ -38,19 +38,9 @@ export default abstract class Vehiculo {
     public getMatricula():string{
         return this.matricula;
     }
-    /*
-        Con getEstado():Estado estariamos retornando el objeto Estado. 
-        Tal vez deberia de ser 
 
-            public getEstado():string{
-            return this.estado.getTipoEstado(); 
-            }
-        Donde getTipoEstado() sea un getter de Estado
-        - REVISAR
-        (una vez corregido documentar)
-    */
-    public getEstado():string{
-        return this.estado.getTipoEstado(); 
+    public getEstado():IEstado{
+        return this.estado; 
     }
 
     /**
@@ -93,13 +83,6 @@ export default abstract class Vehiculo {
         this.matricula = matricula;
     }
 
-    /**
-     * Establece el nuevo estado del vehículo
-     * @param {Estado} estado - el estado del vehículo
-     */
-    public setEstado(estado:Estado):void {
-        this.estado = estado;
-    }
 
     /**
      * Establece el kilómetraje del vehículo
@@ -123,6 +106,14 @@ export default abstract class Vehiculo {
      */
     public setValorCargoExtra(valorCargoExtra:number):void {
         this.valorCargoExtra = valorCargoExtra;
+    }
+
+    /**
+     * Establece el nuevo estado del vehículo
+     * @param {IEstado} estado - el estado del vehículo
+     */
+    public cambiarEstado(estado: IEstado): void{
+        this.estado = estado;
     }
 
     /**
