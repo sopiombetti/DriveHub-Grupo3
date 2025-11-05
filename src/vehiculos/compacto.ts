@@ -1,10 +1,9 @@
-import Estado from "../estados/estado";
 import Vehiculo from "./vehiculo";
 
 export default class Compacto extends Vehiculo{
 
-    constructor(matricula:string, estado:Estado, kilometraje:number){
-        super(matricula, estado, kilometraje);
+    constructor(matricula:string, kilometraje:number){
+        super(matricula, kilometraje);
         this.tarifaBase = 30;
         this.valorCargoExtra = 0.15;
     }

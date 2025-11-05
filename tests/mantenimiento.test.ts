@@ -1,28 +1,28 @@
 import Mantenimiento from "../src/estados/mantenimiento";
-import Estado from "../src/estados/estado";
+import Vehiculo from "../src/vehiculos/vehiculo";
 
 describe('Test Clase Mantenimiento',()=>{
+
+    class MockVehiculo extends Vehiculo {
+        constructor() {
+            super('ABC123', 10000); 
+        }
+
+        public condicionCargosExtra(kmTotales: number, diasTotales: number): boolean {
+            return false; 
+        }
+    }
+
     let mantenimiento: Mantenimiento;
+    let vehiculo: MockVehiculo;
     
     beforeEach(() => {
-      mantenimiento = new Mantenimiento();
+      vehiculo = new MockVehiculo();
+      mantenimiento = new Mantenimiento(vehiculo);
     });
 
     it('debe ser una instancia de Mantenimiento',()=>{
       expect(mantenimiento).toBeInstanceOf(Mantenimiento);
     })
-
-    it('debe ser una instancia de su clase base Estado',()=>{
-      expect(mantenimiento).toBeInstanceOf(Estado);
-    })
-
-    it('debe devolver el tipo de estado "Mantenimiento"', () => {
-      expect(mantenimiento.getTipoEstado()).toBe("Mantenimiento");
-    });
-
-    it('debería permitir cambiar el tipo de estado mediante setTipoEstado', () => {
-      mantenimiento.setTipoEstado("Alquilado");
-      expect(mantenimiento.getTipoEstado()).toBe("Alquilado");
-    });
 
 })

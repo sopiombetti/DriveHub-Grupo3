@@ -1,18 +1,10 @@
-import Estado from "../src/estados/estado";
 import Compacto from "../src/vehiculos/compacto";
 
 describe("Tests de la clase Compacto", () => {
   let instance: Compacto;
 
-  type EstadoLike = Pick<Estado, "getTipoEstado" | "setTipoEstado">;
-
-  let estadoMock: jest.Mocked<EstadoLike>;
   beforeEach(() => {
-    estadoMock = {
-      getTipoEstado: jest.fn().mockReturnValue("Disponible"),
-      setTipoEstado: jest.fn(),
-    };
-    instance = new Compacto("AB001CD", estadoMock as unknown as Estado, 10000);
+    instance = new Compacto("AB001CD", 10000);
   });
 
   afterEach(() => {
@@ -27,7 +19,6 @@ describe("Tests de la clase Compacto", () => {
   it("Debe de inicializarse con los valores pasados por parametro", () => {
     expect(instance.getMatricula()).toBe("AB001CD");
     expect(instance.getKilometraje()).toBe(10000);
-    expect(instance.getEstado()).toBe("Disponible");
   });
 
   it("Debe retornar true si el promedio de km por dia es mayor a 100", () => {
