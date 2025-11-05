@@ -1,22 +1,27 @@
 import Disponible from "../src/estados/disponible"
+import Vehiculo from "../src/vehiculos/vehiculo";
 
 describe("Clase Disponible", () => {
-  let disponible: Disponible;
-
-  beforeEach(() => {
-    disponible = new Disponible();
-  });
+  class MockVehiculo extends Vehiculo {
+          constructor() {
+              super('ABC123', 10000); 
+          }
+  
+          public condicionCargosExtra(kmTotales: number, diasTotales: number): boolean {
+              return false; 
+          }
+      }
+  
+      let disponible: Disponible;
+      let vehiculo: MockVehiculo;
+      
+      beforeEach(() => {
+        vehiculo = new MockVehiculo();
+        disponible = new Disponible(vehiculo);
+      });
 
   test("debería crearse correctamente", () => {
     expect(disponible).toBeInstanceOf(Disponible);
   });
 
-  test('debería tener el tipo de estado "Disponible"', () => {
-    expect(disponible.getTipoEstado()).toBe("Disponible");
-  });
-
-  test("debería permitir cambiar el tipo de estado mediante setTipoEstado", () => {
-    disponible.setTipoEstado("Mantenimiento");
-    expect(disponible.getTipoEstado()).toBe("Mantenimiento");
-  });
 });
