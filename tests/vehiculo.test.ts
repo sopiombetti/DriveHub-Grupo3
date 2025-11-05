@@ -7,32 +7,19 @@ class VehiculoMock extends Vehiculo {
   }
 }
 
-describe("Clase Vehiculo (con mocks de Estado)", () => {
-  let estadoMock: { getTipoEstado: jest.Mock; setTipoEstado: jest.Mock };
+describe("Clase Vehiculo", () => {
   let vehiculo: VehiculoMock;
 
   beforeEach(() => {
-    // Creamos el mock manualmente
-    estadoMock = {
-      getTipoEstado: jest.fn().mockReturnValue("Disponible"),
-      setTipoEstado: jest.fn(),
-    };
-
-    vehiculo = new VehiculoMock("ABC123", estadoMock as any, 5000);
+    vehiculo = new VehiculoMock("ABC123", 5000);
   });
 
   test("debería inicializar correctamente los valores", () => {
     expect(vehiculo.getMatricula()).toBe("ABC123");
     expect(vehiculo.getKilometraje()).toBe(5000);
-    expect(vehiculo.getEstado()).toBe("Disponible");
     expect(vehiculo.getTarifaBase()).toBe(0);
     expect(vehiculo.getValorCargoExtra()).toBe(0);
     expect(vehiculo.getValorCargoExtraSeguro()).toBe(0);
-  });
-
-  test("debería llamar a getTipoEstado() cuando se usa getEstado()", () => {
-    vehiculo.getEstado();
-    expect(estadoMock.getTipoEstado).toHaveBeenCalledTimes(1);
   });
 
   test("debería permitir modificar valores mediante los setters", () => {
