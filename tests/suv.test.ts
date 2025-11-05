@@ -1,21 +1,12 @@
 import SUV from "../src/vehiculos/suv";
 import Vehiculo from "../src/vehiculos/vehiculo";
-import Estado from "../src/estados/estado";
-
-class MockEstado extends Estado {
-    constructor() {
-        super('Disponible'); 
-    }
-}
 
 describe('Test Clase SUV', () => {
     
     let suv: SUV;
-    let mockEstado: MockEstado;
 
     beforeEach(() => {
-        mockEstado = new MockEstado();
-        suv = new SUV('ABC123', mockEstado, 50000);
+        suv = new SUV('ABC123', 50000);
     });
 
     it('debería ser una instancia de SUV', () => {
@@ -34,7 +25,6 @@ describe('Test Clase SUV', () => {
 
     it('debería inicializar los parámetros heredados de Vehiculo correctamente', () => {
     expect(suv.getMatricula()).toBe('ABC123');
-    expect(suv.getEstado()).toBe('Disponible');
     expect(suv.getKilometraje()).toBe(50000);
     });
 
