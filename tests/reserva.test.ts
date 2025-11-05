@@ -1,11 +1,10 @@
 import Reserva from '../src/reserva';
 import Cliente from '../src/cliente'; 
 import Vehiculo from '../src/vehiculos/vehiculo';
-import Estado from '../src/estados/estado';
 
 class MockVehiculo extends Vehiculo {
     constructor() {
-        super('ABC123', new MockEstado(), 10000); 
+        super('ABC123', 10000); 
     }
 
     public condicionCargosExtra(kmTotales: number, diasTotales: number): boolean {
@@ -13,11 +12,6 @@ class MockVehiculo extends Vehiculo {
     }
 }
 
-class MockEstado extends Estado {
-    constructor() {
-        super('Disponible'); 
-    }
-}
 
 class MockCliente extends Cliente {
     constructor() {
