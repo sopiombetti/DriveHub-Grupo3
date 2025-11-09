@@ -1,4 +1,6 @@
 import Cliente from "./cliente";
+import Temporada from "./temporadas/temporada";
+import TemporadaMedia from "./temporadas/temporadaMedia";
 import Vehiculo from "./vehiculos/vehiculo";
 import moment from "moment";
 
@@ -14,6 +16,7 @@ export default class Reserva{
     private fechaInicio: Date;
     private fechaFin: Date;
     private kmInicial: number;
+    private temporada: Temporada;
 
     /** 
         * Crea una nueva reserva con cliente, vehículo y fechas de inicio y fin.
@@ -30,6 +33,7 @@ export default class Reserva{
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.kmInicial = this.vehiculo.getKilometraje();
+        this.temporada = new TemporadaMedia();
     }
     
     /** 
@@ -75,13 +79,32 @@ export default class Reserva{
     public getFechaInicioFormateada(): string {
         return moment(this.fechaInicio).format("DD/MM/YYYY");
     }
-/**
+    /**
     * Devuelve la fecha de finalizacion de la reserva formateada a string.
     * 
     * @returns {String} 
     */
     public getFechaFinFormateada(): string {
         return moment(this.fechaFin).format("DD/MM/YYYY");
+    }
+
+
+    /**
+    * Devuelve la temporada.
+    * 
+    * @returns {Temporada}
+    */
+    public getTemporada(): Temporada{
+        return this.temporada;
+    }
+
+
+    /**
+    * Setea la temporada.
+    * 
+    */
+    public setTemporada(temporada: Temporada): void{
+        this.temporada = temporada;
     }
 
     /**
