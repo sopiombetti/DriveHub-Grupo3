@@ -30,6 +30,7 @@ export default class Cliente extends Persona{
      * @returns {number} - kilometraje del vehículo al momento de la devolución
      */
     public devolverVehiculo(vehiculo: Vehiculo): number{
+        vehiculo.ponerDisponible();
         return vehiculo.getKilometraje();
     }
 
