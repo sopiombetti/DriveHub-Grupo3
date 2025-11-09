@@ -9,6 +9,7 @@ export default class Disponible implements IEstado {
 
     public alquilar() {
         this.vehiculo.cambiarEstado(new Alquilado(this.vehiculo));
+        this.vehiculo.sumarAlquiler();
     }  
     public ponerEnMantenimiento(){
         this.vehiculo.cambiarEstado(new Mantenimiento(this.vehiculo));

@@ -1,6 +1,8 @@
 import CalculadoraTarifa from "../src/calculadoraTarifa";
 import Reserva from "../src/reserva";
+import Temporada from "../src/temporadas/temporada";
 import Vehiculo from "../src/vehiculos/vehiculo";
+import moment from "moment";
 
 type VehiculoLike = Pick<
   Vehiculo,
@@ -12,13 +14,21 @@ type VehiculoLike = Pick<
 
 type ReservaLike = Pick<
   Reserva,
-  "getVehiculo" | "calcularDiasTotales" | "calcularKmTotales" | "getFechaInicio"
+  "getVehiculo" | "calcularDiasTotales" | "calcularKmTotales" | "getFechaInicio" | "getTemporada" | "setTemporada"
+>;
+
+type TemporadaLike = Pick<
+  Temporada,
+  "getPorcentajeTarifa"
 >;
 
 describe("Tests de la clase calculadoraTarifa", () => {
   let vehiculoMock: jest.Mocked<VehiculoLike>;
   let reservaMock: jest.Mocked<ReservaLike>;
   let calculadora: CalculadoraTarifa;
+  let temporadaAltaMock: jest.Mocked<TemporadaLike>;
+  let temporadaMediaMock: jest.Mocked<TemporadaLike>;
+  let temporadaBajaMock: jest.Mocked<TemporadaLike>;
 
   beforeEach(() => {
     vehiculoMock = {
@@ -30,11 +40,25 @@ describe("Tests de la clase calculadoraTarifa", () => {
 
     const fecha = new Date('2025-02-18T00:00:00Z');
 
+    temporadaAltaMock = {
+      getPorcentajeTarifa: jest.fn().mockReturnValue(1.2)
+    }
+
+    temporadaMediaMock = {
+      getPorcentajeTarifa: jest.fn().mockReturnValue(1)
+    }
+
+    temporadaBajaMock = {
+      getPorcentajeTarifa: jest.fn().mockReturnValue(0.9)
+    }
+
     reservaMock = {
       getVehiculo: jest.fn().mockReturnValue(vehiculoMock),
       calcularDiasTotales: jest.fn().mockReturnValue(3),
       calcularKmTotales: jest.fn().mockReturnValue(250),
-      getFechaInicio: jest.fn().mockReturnValue(fecha)
+      getFechaInicio: jest.fn().mockReturnValue(fecha),
+      getTemporada: jest.fn().mockReturnValue(temporadaAltaMock),
+      setTemporada: jest.fn()
     };
 
     calculadora = new CalculadoraTarifa();
@@ -44,27 +68,6 @@ describe("Tests de la clase calculadoraTarifa", () => {
   afterEach(() => {
     jest.clearAllMocks();
     jest.restoreAllMocks();
-  });
-
-  it("Test método calcularTemporada - Media", () => {
-    const fecha = new Date('2025-10-18T00:00:00Z');
-    const total = calculadora.calcularTemporada(fecha);
-    const resultadoEsperado = 1;
-    expect(total).toBe(resultadoEsperado);
-  });
-
-  it("Test método calcularTemporada - Baja", () => {
-    const fecha = new Date('2025-06-18T00:00:00Z');
-    const total = calculadora.calcularTemporada(fecha);
-    const resultadoEsperado = 0.9;
-    expect(total).toBe(resultadoEsperado);
-  });
-
-  it("Test método calcularTemporada - Alta", () => {
-    const fecha = new Date('2025-02-18T00:00:00Z');
-    const total = calculadora.calcularTemporada(fecha);
-    const resultadoEsperado = 1.2;
-    expect(total).toBe(resultadoEsperado);
   });
 
   it("Debe calcular sin cargos extra cuando condicionCargosExtra() es false", () => {
@@ -80,6 +83,7 @@ describe("Tests de la clase calculadoraTarifa", () => {
     expect(reservaMock.getVehiculo).toHaveBeenCalled();
     expect(reservaMock.calcularDiasTotales).toHaveBeenCalled();
     expect(reservaMock.calcularKmTotales).toHaveBeenCalled();
+    expect(reservaMock.getTemporada().getPorcentajeTarifa()).toBe(1.2);
   });
 
   it("Debe sumar cargos extra cuando condicionCargosExtra() es true", () => {
@@ -95,6 +99,7 @@ describe("Tests de la clase calculadoraTarifa", () => {
     expect(reservaMock.getVehiculo).toHaveBeenCalled();
     expect(reservaMock.calcularDiasTotales).toHaveBeenCalled();
     expect(reservaMock.calcularKmTotales).toHaveBeenCalled();
+    expect(reservaMock.getTemporada().getPorcentajeTarifa()).toBe(1.2);
   });
 
   it("Test adicional para prueba de datos de Mock", () => {
