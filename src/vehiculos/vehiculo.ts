@@ -1,6 +1,7 @@
 import moment from "moment";
 import Disponible from "../estados/disponible";
 import IEstado from "../estados/estado";
+import Reserva from "../reserva";
 
 /**
  * Clase abstracta de un vehiculo
@@ -17,6 +18,7 @@ export default abstract class Vehiculo {
     protected kmDesdeUltimoMant: number;
     protected fechaUltimoMant: Date;
     protected alquileresCompletados: number;
+    protected reservasConfirmadas: Array<Reserva>
 
     /**
      * constructor para instanciar objetos de las clases derivadas de vehiculo
@@ -36,8 +38,17 @@ export default abstract class Vehiculo {
         this.kmDesdeUltimoMant = 0;
         this.fechaUltimoMant = moment().toDate();
         this.alquileresCompletados = 0;
+        this.reservasConfirmadas = [];
     }
 
+
+    public getReservasConfirmadas(): Array<Reserva>{
+        return this.reservasConfirmadas;
+    }
+
+    public agregarReserva(reserva: Reserva): void{
+        this.reservasConfirmadas.push(reserva);
+    }
 
     public getKmDesdeUltimoMant(): number{
         return this.kmDesdeUltimoMant;
