@@ -179,6 +179,18 @@ export default abstract class Vehiculo {
         this.estado.ponerEnLimpieza();
     }
 
+    public puedeSerAlquilado(fechaInicioSolicitada: Date, fechaFinSolicitada: Date): boolean{
+        let puedeSerAlquilado = true;
+        let i = 0;
+        while(puedeSerAlquilado && i < this.reservasConfirmadas.length){
+            if(!moment(fechaFinSolicitada).isBefore(this.reservasConfirmadas[i].getFechaInicio()) || !moment(fechaInicioSolicitada).isAfter(this.reservasConfirmadas[i].getFechaFin())){
+                puedeSerAlquilado = false;
+            }
+            i++;
+        }
+        return puedeSerAlquilado;
+    }
+
     /**
      * Evalúa la condición para establecer si corresponde el cobro de cargos extras
      * @abstract

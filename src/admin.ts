@@ -28,8 +28,8 @@ export default class Admin {
     * @param {Vehiculo} Vehiculo a evaluar.
     * @returns {boolean}
     */
-    public chequearDisponibilidad(vehiculo: Vehiculo):boolean {
-        return vehiculo.getEstado().puedeSerAlquilado();
+    public chequearDisponibilidad(vehiculo: Vehiculo, fechaInicioSolicitada: Date, fechaFinSolicitada: Date):boolean {
+        return vehiculo.puedeSerAlquilado(fechaInicioSolicitada, fechaFinSolicitada);
     }
 
     /**
@@ -40,9 +40,10 @@ export default class Admin {
     */
 
     public generarReserva(solicitudReserva: SolicitudReserva):void {
-        if (this.chequearDisponibilidad(solicitudReserva.getVehiculo())){
+        if (this.chequearDisponibilidad(solicitudReserva.getVehiculo(), solicitudReserva.getFechaInicio(), solicitudReserva.getFechaFin())){
             let nuevaReserva = new Reserva(solicitudReserva.getCliente(), solicitudReserva.getVehiculo(), solicitudReserva.getFechaInicio(), solicitudReserva.getFechaFin());
             this.reservas.push(nuevaReserva);
+            solicitudReserva.getVehiculo().agregarReserva(nuevaReserva);
         }
     }
 
