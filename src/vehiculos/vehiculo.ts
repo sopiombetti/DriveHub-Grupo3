@@ -18,7 +18,8 @@ export default abstract class Vehiculo {
     protected kmDesdeUltimoMant: number;
     protected fechaUltimoMant: Date;
     protected alquileresCompletados: number;
-    protected reservasConfirmadas: Array<Reserva>
+    protected reservasConfirmadas: Array<Reserva>;
+    protected costoMantenimiento: number;
 
     /**
      * constructor para instanciar objetos de las clases derivadas de vehiculo
@@ -39,6 +40,7 @@ export default abstract class Vehiculo {
         this.fechaUltimoMant = moment().toDate();
         this.alquileresCompletados = 0;
         this.reservasConfirmadas = [];
+        this.costoMantenimiento = 40;
     }
 
 

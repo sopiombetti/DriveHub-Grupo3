@@ -50,6 +50,9 @@ export default class Admin {
     }
 
 
+    /**
+    * Pone en estado alquiler los vehiculos que comienzan una reserva ese día.
+    */
     public altasAlquileresDelDia(): void{
         this.reservas.forEach(reserva => {
             if(reserva.getFechaInicioFormateada() == moment().format("DD/MM/YYYY")){
@@ -57,6 +60,7 @@ export default class Admin {
             }
         })
     }
+
 
     /**
     * Devuelve la lista de clientes.
