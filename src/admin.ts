@@ -2,6 +2,8 @@ import Vehiculo from "./vehiculos/vehiculo";
 import Reserva from "./reserva";
 import Cliente from "./cliente";
 import SolicitudReserva from "./solicitudReserva";
+import moment from "moment";
+
 /**
 Administra clientes, vehículos y reservas.  
 Permite verificar disponibilidad y gestionar las listas.
@@ -45,6 +47,15 @@ export default class Admin {
             this.reservas.push(nuevaReserva);
             solicitudReserva.getVehiculo().agregarReserva(nuevaReserva);
         }
+    }
+
+
+    public altasAlquileresDelDia(): void{
+        this.reservas.forEach(reserva => {
+            if(reserva.getFechaInicioFormateada() == moment().format("DD/MM/YYYY")){
+                reserva.getVehiculo().alquilar();
+            }
+        })
     }
 
     /**
