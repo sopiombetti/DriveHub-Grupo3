@@ -22,11 +22,50 @@ describe('Tests clase Admin', () => {
         admin = new Admin();
     });
 
-    it('Chequear disponibilidad (true)', () => {
+    /*it('Chequear disponibilidad (true)', () => {
         const vehiculoDisponible = new MockVehiculo("000", 10);
         const resultado = admin.chequearDisponibilidad(vehiculoDisponible);
         expect(resultado).toBe(true);
+    });*/
+
+    describe('chequearDisponibilidad', () => {
+        const FECHA_INICIO = new Date('2025-10-01');
+        const FECHA_FIN = new Date('2025-10-10');
+        let vehiculo: MockVehiculo;
+
+        beforeEach(() => {
+            vehiculo = new MockVehiculo("000", 10);
+        });
+
+        it('debe devolver true si el vehiculo informa que puede ser alquilado', () => {
+        
+            const spyVehiculo = jest.spyOn(vehiculo, 'puedeSerAlquilado')
+                                    .mockReturnValue(true);
+
+            const resultado = admin.chequearDisponibilidad(vehiculo, FECHA_INICIO, FECHA_FIN);
+
+            expect(resultado).toBe(true);
+            expect(spyVehiculo).toHaveBeenCalledTimes(1);
+            expect(spyVehiculo).toHaveBeenCalledWith(FECHA_INICIO, FECHA_FIN);
+
+            spyVehiculo.mockRestore();
+        });
+
+        it('debe devolver false si el vehiculo informa que no puede ser alquilado', () => {
+        
+            const spyVehiculo = jest.spyOn(vehiculo, 'puedeSerAlquilado')
+                                    .mockReturnValue(false);
+
+            const resultado = admin.chequearDisponibilidad(vehiculo, FECHA_INICIO, FECHA_FIN);
+
+            expect(resultado).toBe(false);
+            expect(spyVehiculo).toHaveBeenCalledTimes(1);
+            expect(spyVehiculo).toHaveBeenCalledWith(FECHA_INICIO, FECHA_FIN);
+
+            spyVehiculo.mockRestore();
+        });
     });
+
 
     it('Agregar un cliente nuevo al array', () => {
         const cliente = new MockCliente('Sofia', '123', '@mail');
