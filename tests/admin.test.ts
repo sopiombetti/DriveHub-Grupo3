@@ -1,6 +1,8 @@
 import Admin from '../src/admin';
 import Cliente from '../src/cliente';
 import Vehiculo from '../src/vehiculos/vehiculo';
+import SolicitudReserva from '../src/solicitudReserva';
+import Reserva from '../src/reserva';
 
 
 class MockVehiculo extends Vehiculo{
@@ -65,6 +67,60 @@ describe('Tests clase Admin', () => {
             spyVehiculo.mockRestore();
         });
     });
+
+    describe('generarReserva', () => {
+        let mockCliente: MockCliente;
+        let mockVehiculo: MockVehiculo;
+        let mockSolicitud: SolicitudReserva;
+        let spyChequearDisp: jest.SpyInstance;
+        let spyAgregarReservaVehiculo: jest.SpyInstance;
+
+        const FECHA_INICIO = new Date('2025-11-01');
+        const FECHA_FIN = new Date('2025-11-10');
+
+        beforeEach(() => {
+            mockCliente = new MockCliente('Cliente Test', '12345', '@mail');
+            mockVehiculo = new MockVehiculo('ABC-123', 0);
+
+            mockSolicitud = new SolicitudReserva(mockCliente, mockVehiculo, FECHA_INICIO, FECHA_FIN);
+
+            spyChequearDisp = jest.spyOn(admin, 'chequearDisponibilidad');
+
+            spyAgregarReservaVehiculo = jest.spyOn(mockVehiculo, 'agregarReserva')
+                                             .mockImplementation(() => {}); 
+        });
+
+        afterEach(() => {
+            spyChequearDisp.mockRestore();
+            spyAgregarReservaVehiculo.mockRestore();
+        });
+
+        it('debe crear una reserva y agregarla si el vehiculo esta disponible', () => {
+            spyChequearDisp.mockReturnValue(true);
+
+            admin.generarReserva(mockSolicitud);
+
+            expect(spyChequearDisp).toHaveBeenCalledTimes(1);
+            expect(spyChequearDisp).toHaveBeenCalledWith(mockVehiculo, FECHA_INICIO, FECHA_FIN);
+            expect(admin.getReservas()).toHaveLength(1);
+            expect(spyAgregarReservaVehiculo).toHaveBeenCalledTimes(1);
+        });
+
+        it('No debe crear una reserva si el vehiculo no esta disponible', () => {
+            spyChequearDisp.mockReturnValue(false);
+
+            admin.generarReserva(mockSolicitud);
+
+            expect(spyChequearDisp).toHaveBeenCalledTimes(1);
+            expect(spyChequearDisp).toHaveBeenCalledWith(mockVehiculo, FECHA_INICIO, FECHA_FIN);
+            expect(admin.getReservas()).toHaveLength(0);
+            expect(spyAgregarReservaVehiculo).not.toHaveBeenCalled();
+        });
+    });
+
+
+
+
 
 
     it('Agregar un cliente nuevo al array', () => {
