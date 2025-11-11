@@ -2,6 +2,8 @@ import Vehiculo from "./vehiculos/vehiculo";
 import Reserva from "./reserva";
 import Cliente from "./cliente";
 import SolicitudReserva from "./solicitudReserva";
+import moment from "moment";
+
 /**
 Administra clientes, vehículos y reservas.  
 Permite verificar disponibilidad y gestionar las listas.
@@ -28,8 +30,8 @@ export default class Admin {
     * @param {Vehiculo} Vehiculo a evaluar.
     * @returns {boolean}
     */
-    public chequearDisponibilidad(vehiculo: Vehiculo):boolean {
-        return vehiculo.getEstado().puedeSerAlquilado();
+    public chequearDisponibilidad(vehiculo: Vehiculo, fechaInicioSolicitada: Date, fechaFinSolicitada: Date):boolean {
+        return vehiculo.puedeSerAlquilado(fechaInicioSolicitada, fechaFinSolicitada);
     }
 
     /**
@@ -40,11 +42,25 @@ export default class Admin {
     */
 
     public generarReserva(solicitudReserva: SolicitudReserva):void {
-        if (this.chequearDisponibilidad(solicitudReserva.getVehiculo())){
+        if (this.chequearDisponibilidad(solicitudReserva.getVehiculo(), solicitudReserva.getFechaInicio(), solicitudReserva.getFechaFin())){
             let nuevaReserva = new Reserva(solicitudReserva.getCliente(), solicitudReserva.getVehiculo(), solicitudReserva.getFechaInicio(), solicitudReserva.getFechaFin());
             this.reservas.push(nuevaReserva);
+            solicitudReserva.getVehiculo().agregarReserva(nuevaReserva);
         }
     }
+
+
+    /**
+    * Pone en estado alquiler los vehiculos que comienzan una reserva ese día.
+    */
+    public altasAlquileresDelDia(): void{
+        this.reservas.forEach(reserva => {
+            if(reserva.getFechaInicioFormateada() == moment().format("DD/MM/YYYY")){
+                reserva.getVehiculo().alquilar();
+            }
+        })
+    }
+
 
     /**
     * Devuelve la lista de clientes.

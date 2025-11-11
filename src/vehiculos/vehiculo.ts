@@ -1,6 +1,7 @@
 import moment from "moment";
 import Disponible from "../estados/disponible";
 import IEstado from "../estados/estado";
+import Reserva from "../reserva";
 
 /**
  * Clase abstracta de un vehiculo
@@ -17,6 +18,8 @@ export default abstract class Vehiculo {
     protected kmDesdeUltimoMant: number;
     protected fechaUltimoMant: Date;
     protected alquileresCompletados: number;
+    protected reservasConfirmadas: Array<Reserva>;
+    protected costoMantenimiento: number;
 
     /**
      * constructor para instanciar objetos de las clases derivadas de vehiculo
@@ -36,8 +39,18 @@ export default abstract class Vehiculo {
         this.kmDesdeUltimoMant = 0;
         this.fechaUltimoMant = moment().toDate();
         this.alquileresCompletados = 0;
+        this.reservasConfirmadas = [];
+        this.costoMantenimiento = 40;
     }
 
+
+    public getReservasConfirmadas(): Array<Reserva>{
+        return this.reservasConfirmadas;
+    }
+
+    public agregarReserva(reserva: Reserva): void{
+        this.reservasConfirmadas.push(reserva);
+    }
 
     public getKmDesdeUltimoMant(): number{
         return this.kmDesdeUltimoMant;
@@ -166,6 +179,18 @@ export default abstract class Vehiculo {
 
     public ponerEnLimpieza(){
         this.estado.ponerEnLimpieza();
+    }
+
+    public puedeSerAlquilado(fechaInicioSolicitada: Date, fechaFinSolicitada: Date): boolean{
+        let puedeSerAlquilado = true;
+        let i = 0;
+        while(puedeSerAlquilado && i < this.reservasConfirmadas.length){
+            if(!moment(fechaFinSolicitada).isBefore(this.reservasConfirmadas[i].getFechaInicio()) || !moment(fechaInicioSolicitada).isAfter(this.reservasConfirmadas[i].getFechaFin())){
+                puedeSerAlquilado = false;
+            }
+            i++;
+        }
+        return puedeSerAlquilado;
     }
 
     /**
