@@ -118,8 +118,61 @@ describe('Tests clase Admin', () => {
         });
     });
 
+    describe('altasAlquileresDelDia', () => {
+        const HOY = new Date('2025-11-11T12:00:00');
+        const HOY_FORMATEADO = "11/11/2025";
+        const MANANA_FORMATEADO = "12/11/2025";
 
+        let mockVehiculoHoy: MockVehiculo;
+        let mockVehiculoManana: MockVehiculo;
+        let spyAlquilarVehiculoHoy: jest.SpyInstance;
+        let spyAlquilarVehiculoManana: jest.SpyInstance;
 
+        beforeEach(() => {
+            jest.useFakeTimers().setSystemTime(HOY);
+
+            mockVehiculoHoy = new MockVehiculo('AUTO-HOY', 0);
+            mockVehiculoManana = new MockVehiculo('AUTO-MANANA', 0);
+
+            spyAlquilarVehiculoHoy = jest.spyOn(mockVehiculoHoy, 'alquilar').mockImplementation(() => {});
+            spyAlquilarVehiculoManana = jest.spyOn(mockVehiculoManana, 'alquilar').mockImplementation(() => {});
+        });
+
+        afterEach(() => {
+            jest.useRealTimers();
+            spyAlquilarVehiculoHoy.mockRestore();
+            spyAlquilarVehiculoManana.mockRestore();
+        });
+
+        it('debe llamar a alquilar() solo en vehiculos cuya reserva inicia hoy', () => {
+            const mockReservaHoy = {
+                getFechaInicioFormateada: jest.fn().mockReturnValue(HOY_FORMATEADO),
+                getVehiculo: jest.fn().mockReturnValue(mockVehiculoHoy)
+            }as unknown as Reserva;
+
+            const mockReservaManana = {
+                getFechaInicioFormateada: jest.fn().mockReturnValue(MANANA_FORMATEADO),
+                getVehiculo: jest.fn().mockReturnValue(mockVehiculoManana)
+            }as unknown as Reserva;
+
+            admin['reservas'] = [mockReservaHoy, mockReservaManana];
+
+            admin.altasAlquileresDelDia();
+
+            expect(mockReservaHoy.getFechaInicioFormateada).toHaveBeenCalledTimes(1);
+            expect(mockReservaManana.getFechaInicioFormateada).toHaveBeenCalledTimes(1);
+
+            expect(spyAlquilarVehiculoHoy).toHaveBeenCalledTimes(1);
+            expect(spyAlquilarVehiculoManana).not.toHaveBeenCalled();
+        });
+
+        it('no debe hacer nada si no hay reservas', () => {
+            
+            admin['reservas'] = [];
+
+            expect(() => admin.altasAlquileresDelDia()).not.toThrow();
+        });
+    });
 
 
 
