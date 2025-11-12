@@ -24,12 +24,12 @@ describe("Clase Vehiculo", () => {
 
   test("debería permitir modificar valores mediante los setters", () => {
     vehiculo.setMatricula("XYZ999");
-    vehiculo.setKilometraje(10000);
     vehiculo.setTarifaBase(50);
     vehiculo.setValorCargoExtra(0.2);
+    vehiculo.actualizarKilometraje(100);
 
     expect(vehiculo.getMatricula()).toBe("XYZ999");
-    expect(vehiculo.getKilometraje()).toBe(10000);
+    expect(vehiculo.getKilometraje()).toBe(5100);
     expect(vehiculo.getTarifaBase()).toBe(50);
     expect(vehiculo.getValorCargoExtra()).toBe(0.2);
     expect(vehiculo.getValorCargoExtraSeguro()).toBe(0);

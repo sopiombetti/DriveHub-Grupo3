@@ -14,7 +14,7 @@ type VehiculoLike = Pick<
 
 type ReservaLike = Pick<
   Reserva,
-  "getVehiculo" | "calcularDiasTotales" | "calcularKmTotales" | "getFechaInicio" | "getTemporada" | "setTemporada"
+  "getVehiculo" | "calcularDiasTotales" | "calcularKmRecorridos" | "getFechaInicio" | "getTemporada" | "setTemporada"
 >;
 
 type TemporadaLike = Pick<
@@ -55,7 +55,7 @@ describe("Tests de la clase calculadoraTarifa", () => {
     reservaMock = {
       getVehiculo: jest.fn().mockReturnValue(vehiculoMock),
       calcularDiasTotales: jest.fn().mockReturnValue(3),
-      calcularKmTotales: jest.fn().mockReturnValue(250),
+      calcularKmRecorridos: jest.fn().mockReturnValue(250),
       getFechaInicio: jest.fn().mockReturnValue(fecha),
       getTemporada: jest.fn().mockReturnValue(temporadaAltaMock),
       setTemporada: jest.fn()
@@ -82,7 +82,7 @@ describe("Tests de la clase calculadoraTarifa", () => {
     expect(vehiculoMock.condicionCargosExtra).toHaveBeenCalledWith(250, 3);
     expect(reservaMock.getVehiculo).toHaveBeenCalled();
     expect(reservaMock.calcularDiasTotales).toHaveBeenCalled();
-    expect(reservaMock.calcularKmTotales).toHaveBeenCalled();
+    expect(reservaMock.calcularKmRecorridos).toHaveBeenCalled();
     expect(reservaMock.getTemporada().getPorcentajeTarifa()).toBe(1.2);
   });
 
@@ -98,7 +98,7 @@ describe("Tests de la clase calculadoraTarifa", () => {
     expect(vehiculoMock.condicionCargosExtra).toHaveBeenCalledWith(250, 3);
     expect(reservaMock.getVehiculo).toHaveBeenCalled();
     expect(reservaMock.calcularDiasTotales).toHaveBeenCalled();
-    expect(reservaMock.calcularKmTotales).toHaveBeenCalled();
+    expect(reservaMock.calcularKmRecorridos).toHaveBeenCalled();
     expect(reservaMock.getTemporada().getPorcentajeTarifa()).toBe(1.2);
   });
 
@@ -107,7 +107,7 @@ describe("Tests de la clase calculadoraTarifa", () => {
     vehiculoMock.getValorCargoExtraSeguro.mockReturnValue(100);
     vehiculoMock.getValorCargoExtra.mockReturnValue(10);
     reservaMock.calcularDiasTotales.mockReturnValue(2);
-    reservaMock.calcularKmTotales.mockReturnValue(50);
+    reservaMock.calcularKmRecorridos.mockReturnValue(50);
     vehiculoMock.condicionCargosExtra.mockReturnValue(true);
 
     const total = calculadora.calcularTarifa(
@@ -117,6 +117,6 @@ describe("Tests de la clase calculadoraTarifa", () => {
     expect(vehiculoMock.condicionCargosExtra).toHaveBeenCalledWith(50, 2);
     expect(reservaMock.getVehiculo).toHaveBeenCalled();
     expect(reservaMock.calcularDiasTotales).toHaveBeenCalled();
-    expect(reservaMock.calcularKmTotales).toHaveBeenCalled();
+    expect(reservaMock.calcularKmRecorridos).toHaveBeenCalled();
   });
 });
