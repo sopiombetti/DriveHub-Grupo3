@@ -1,3 +1,5 @@
+import { AlquilarException } from "../excepciones/alquilarException";
+import { MantenimientoException } from "../excepciones/mantenimientoException";
 import Vehiculo from "../vehiculos/vehiculo";
 import Disponible from "./disponible";
 import IEstado from "./estado";
@@ -9,13 +11,11 @@ export default class Alquilado implements IEstado {
       constructor(private vehiculo : Vehiculo){}
  
       public alquilar() {
-         // alquilerException a implementar
-         throw new Error();
+         throw new AlquilarException("El vehiculo no se puede alquilar");
       }  
 
       public ponerEnMantenimiento(){
-         //mantenimientoException a implementar
-         throw new Error();
+         throw new MantenimientoException("El vehiculo no puede ser enviado a mantenimiento");
       }
 
       public necesitaMantenimiento(): boolean{

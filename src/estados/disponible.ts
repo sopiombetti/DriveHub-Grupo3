@@ -15,7 +15,6 @@ export default class Disponible implements IEstado {
     }
 
     public ponerDisponible(){
-        //disponibleException a implementar
         throw new Error();
     }
 
