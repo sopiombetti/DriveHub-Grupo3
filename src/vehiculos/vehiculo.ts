@@ -68,6 +68,10 @@ export default abstract class Vehiculo {
         this.kmDesdeUltimoMant = km;
     }
 
+    public actualizarKmDesdeUltMant(km: number): void{
+        this.kmDesdeUltimoMant += km;
+    }
+
     public setFechaUltimoMant(fecha: Date): void{
         this.fechaUltimoMant = fecha;
     }
@@ -137,8 +141,8 @@ export default abstract class Vehiculo {
      * Establece el kilómetraje del vehículo
      * @param {number} km - el kilometraje del vehículo 
      */
-    public setKilometraje(km:number):void {
-        this.kilometraje = km;
+    public actualizarKilometraje(km:number):void {
+        this.kilometraje += km;
     }
 
     /**
