@@ -107,15 +107,21 @@ export default class Reserva{
         this.temporada = temporada;
     }
 
+    
+    public terminarReserva(): void{
+        this.vehiculo.ponerDisponible();
+        this.vehiculo.actualizarKilometraje(this.calcularKmRecorridos());
+        this.vehiculo.actualizarKmDesdeUltMant(this.calcularKmRecorridos());
+    }
+    
+    
     /**
-    * Calcula los kilómetros recorridos durante la reserva.
-    * 
+    * Devuelve los kilómetros recorridos durante la reserva.
     * @returns {number}
     */
-    public calcularKmTotales(): number{
-        let kmTotal = 0;
-        kmTotal = this.cliente.devolverVehiculo(this.vehiculo) - this.kmInicial;
-        return kmTotal;
+    public calcularKmRecorridos(): number{
+        let kmRecorridos = Math.floor((Math.random() * 651) + 50);
+        return kmRecorridos;
     }
 
     /**

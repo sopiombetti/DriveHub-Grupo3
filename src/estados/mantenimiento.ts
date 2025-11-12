@@ -1,7 +1,6 @@
 import Vehiculo from "../vehiculos/vehiculo";
 import Disponible from "./disponible";
 import IEstado from "./estado";
-import Limpieza from "./limpieza";
 
 export default class Mantenimiento implements IEstado {  
     constructor(private vehiculo : Vehiculo){}
@@ -13,10 +12,6 @@ export default class Mantenimiento implements IEstado {
     public ponerEnMantenimiento(){
         //mantenimientoException a implementar
         throw new Error();
-    }
-
-    public ponerEnLimpieza(){
-        this.vehiculo.cambiarEstado(new Limpieza(this.vehiculo));
     }
 
     public ponerDisponible(){

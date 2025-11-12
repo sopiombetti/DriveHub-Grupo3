@@ -94,15 +94,4 @@ describe('Test Clase Reserva', () => {
 
     });
 
-    it('debería calcular correctamente los kilómetros totales recorridos', () => {
-        
-        const kmTotalesCalculados = reserva.calcularKmTotales();
-
-        const kmInicialEsperado = 10000;
-        const kmFinalSimulado = 12000;
-        const kmTotalesEsperados = kmFinalSimulado - kmInicialEsperado;
-        expect(kmTotalesCalculados).toBe(kmTotalesEsperados);
-
-    });
-
 });

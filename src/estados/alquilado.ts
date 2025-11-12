@@ -30,11 +30,6 @@ export default class Alquilado implements IEstado {
          return false;
       }
  
-      public ponerEnLimpieza(){
-         //limpiezaException a implementar
-         throw new Error();
-      }
- 
       public ponerDisponible(){
          if(this.necesitaMantenimiento()){
             this.vehiculo.cambiarEstado(new Mantenimiento(this.vehiculo));
