@@ -1,7 +1,6 @@
 import Vehiculo from "../vehiculos/vehiculo";
 import Alquilado from "./alquilado";
 import IEstado from "./estado";
-import Limpieza from "./limpieza";
 import Mantenimiento from "./mantenimiento";
 
 export default class Disponible implements IEstado {
@@ -13,10 +12,6 @@ export default class Disponible implements IEstado {
     }  
     public ponerEnMantenimiento(){
         this.vehiculo.cambiarEstado(new Mantenimiento(this.vehiculo));
-    }
-
-    public ponerEnLimpieza(){
-        this.vehiculo.cambiarEstado(new Limpieza(this.vehiculo));
     }
 
     public ponerDisponible(){

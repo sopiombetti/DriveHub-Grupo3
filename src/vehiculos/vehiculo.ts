@@ -181,10 +181,6 @@ export default abstract class Vehiculo {
         this.estado.ponerDisponible();
     }
 
-    public ponerEnLimpieza(){
-        this.estado.ponerEnLimpieza();
-    }
-
     public puedeSerAlquilado(fechaInicioSolicitada: Date, fechaFinSolicitada: Date): boolean{
         let puedeSerAlquilado = true;
         let i = 0;
