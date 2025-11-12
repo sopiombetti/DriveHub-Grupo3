@@ -1,3 +1,4 @@
+import Reserva from "../src/reserva";
 import Vehiculo from "../src/vehiculos/vehiculo";
 
 // Subclase concreta para poder instanciar Vehiculo
@@ -7,14 +8,24 @@ class VehiculoMock extends Vehiculo {
   }
 }
 
+class ReservaMock extends Reserva{}
+
 describe("Clase Vehiculo", () => {
   let vehiculo: VehiculoMock;
+  let reservaMock: ReservaMock;
 
   beforeEach(() => {
     vehiculo = new VehiculoMock("ABC123", 5000);
+    const fechaInicio = new Date('2025-11-11T00:00:00Z');
+    const fechaFin = new Date('2025-11-21T00:00:00Z');
+
+    reservaMock = {
+      getFechaInicio: jest.fn().mockReturnValue(fechaInicio),
+      getFechaFin: jest.fn().mockReturnValue(fechaFin)
+    } as unknown as Reserva;
   });
 
-  test("debería inicializar correctamente los valores", () => {
+  it("debería inicializar correctamente los valores", () => {
     expect(vehiculo.getMatricula()).toBe("ABC123");
     expect(vehiculo.getKilometraje()).toBe(5000);
     expect(vehiculo.getTarifaBase()).toBe(0);
@@ -22,7 +33,7 @@ describe("Clase Vehiculo", () => {
     expect(vehiculo.getValorCargoExtraSeguro()).toBe(0);
   });
 
-  test("debería permitir modificar valores mediante los setters", () => {
+  it("debería permitir modificar valores mediante los setters", () => {
     vehiculo.setMatricula("XYZ999");
     vehiculo.setTarifaBase(50);
     vehiculo.setValorCargoExtra(0.2);
@@ -35,8 +46,37 @@ describe("Clase Vehiculo", () => {
     expect(vehiculo.getValorCargoExtraSeguro()).toBe(0);
   });
 
-  test("debería ejecutar correctamente la lógica de condicionCargosExtra()", () => {
+  it("debería ejecutar correctamente la lógica de condicionCargosExtra()", () => {
     expect(vehiculo.condicionCargosExtra(1200, 10)).toBe(true);
     expect(vehiculo.condicionCargosExtra(500, 10)).toBe(false);
   });
+
+  it("método puede ser alquilado debe ser false", () => {
+    const fechaInicioBuscada = new Date('2025-11-11T00:00:00Z');
+    const fechaFinBuscada = new Date('2025-11-13T00:00:00Z');
+    vehiculo['reservasConfirmadas'] = [reservaMock];
+    expect(vehiculo.puedeSerAlquilado(fechaInicioBuscada, fechaFinBuscada)).toBeFalsy();
+  })
+
+  it("método puede ser alquilado debe ser false", () => {
+    const fechaInicioBuscada = new Date('2025-11-15T00:00:00Z');
+    const fechaFinBuscada = new Date('2025-11-25T00:00:00Z');
+    vehiculo['reservasConfirmadas'] = [reservaMock];
+    expect(vehiculo.puedeSerAlquilado(fechaInicioBuscada, fechaFinBuscada)).toBe(false);
+  })
+
+  it("método puede ser alquilado debe ser true", () => {
+    const fechaInicioBuscada = new Date('2025-11-24T00:00:00Z');
+    const fechaFinBuscada = new Date('2025-11-30T00:00:00Z');
+    vehiculo['reservasConfirmadas'] = [reservaMock];
+    expect(vehiculo.puedeSerAlquilado(fechaInicioBuscada, fechaFinBuscada)).toBe(true);
+  })
+
+  it("método puede ser alquilado debe ser true", () => {
+    const fechaInicioBuscada = new Date('2025-10-29T00:00:00Z');
+    const fechaFinBuscada = new Date('2025-11-05T00:00:00Z');
+    vehiculo['reservasConfirmadas'] = [reservaMock];
+    expect(vehiculo.puedeSerAlquilado(fechaInicioBuscada, fechaFinBuscada)).toBe(true);
+  })
+
 });

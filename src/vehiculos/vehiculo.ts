@@ -185,7 +185,10 @@ export default abstract class Vehiculo {
         let puedeSerAlquilado = true;
         let i = 0;
         while(puedeSerAlquilado && i < this.reservasConfirmadas.length){
-            if(!moment(fechaFinSolicitada).isBefore(this.reservasConfirmadas[i].getFechaInicio()) || !moment(fechaInicioSolicitada).isAfter(this.reservasConfirmadas[i].getFechaFin())){
+            const reserva = this.reservasConfirmadas[i];
+            const inicioReserva = moment(reserva.getFechaInicio());
+            const finReserva = moment(reserva.getFechaFin());
+            if(moment(fechaInicioSolicitada).isBefore(finReserva) && moment(fechaFinSolicitada).isAfter(inicioReserva)){
                 puedeSerAlquilado = false;
             }
             i++;
