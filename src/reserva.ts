@@ -1,3 +1,4 @@
+import CalculadoraTarifa from "./calculadoraTarifa";
 import Cliente from "./cliente";
 import Temporada from "./temporadas/temporada";
 import TemporadaMedia from "./temporadas/temporadaMedia";
@@ -113,6 +114,11 @@ export default class Reserva{
         this.vehiculo.actualizarKilometraje(this.calcularKmRecorridos());
         this.vehiculo.actualizarKmDesdeUltMant(this.calcularKmRecorridos());
     }
+
+    public calcularTarifaReserva(): number{
+        const calculadora: CalculadoraTarifa = new CalculadoraTarifa();
+        return calculadora.calcularTarifa(this);
+    }
     
     
     /**
@@ -130,12 +136,12 @@ export default class Reserva{
     * @returns {number} 
     */
     public calcularDiasTotales(): number {
-    const inicio = moment(this.fechaInicio);
-    const fin = moment(this.fechaFin);
+        const inicio = moment(this.fechaInicio);
+        const fin = moment(this.fechaFin);
 
-    const dias = fin.diff(inicio, "days");
+        const dias = fin.diff(inicio, "days");
 
-    return dias;
-}
+        return dias;
+    }
 
 }
