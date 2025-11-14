@@ -1,4 +1,7 @@
+import CalculadoraTarifa from "./calculadoraTarifa";
 import Cliente from "./cliente";
+import Temporada from "./temporadas/temporada";
+import TemporadaMedia from "./temporadas/temporadaMedia";
 import Vehiculo from "./vehiculos/vehiculo";
 import moment from "moment";
 
@@ -13,7 +16,7 @@ export default class Reserva{
     private vehiculo: Vehiculo;
     private fechaInicio: Date;
     private fechaFin: Date;
-    private kmInicial: number;
+    private temporada: Temporada;
 
     /** 
         * Crea una nueva reserva con cliente, vehículo y fechas de inicio y fin.
@@ -29,7 +32,7 @@ export default class Reserva{
         this.vehiculo = vehiculo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.kmInicial = this.vehiculo.getKilometraje();
+        this.temporada = new TemporadaMedia();
     }
     
     /** 
@@ -75,7 +78,7 @@ export default class Reserva{
     public getFechaInicioFormateada(): string {
         return moment(this.fechaInicio).format("DD/MM/YYYY");
     }
-/**
+    /**
     * Devuelve la fecha de finalizacion de la reserva formateada a string.
     * 
     * @returns {String} 
@@ -84,15 +87,45 @@ export default class Reserva{
         return moment(this.fechaFin).format("DD/MM/YYYY");
     }
 
+
     /**
-    * Calcula los kilómetros recorridos durante la reserva.
+    * Devuelve la temporada.
     * 
+    * @returns {Temporada}
+    */
+    public getTemporada(): Temporada{
+        return this.temporada;
+    }
+
+
+    /**
+    * Setea la temporada.
+    * 
+    */
+    public setTemporada(temporada: Temporada): void{
+        this.temporada = temporada;
+    }
+
+    
+    public terminarReserva(): void{
+        this.vehiculo.ponerDisponible();
+        this.vehiculo.actualizarKilometraje(this.calcularKmRecorridos());
+        this.vehiculo.actualizarKmDesdeUltMant(this.calcularKmRecorridos());
+    }
+
+    public calcularTarifaReserva(): number{
+        const calculadora: CalculadoraTarifa = new CalculadoraTarifa();
+        return calculadora.calcularTarifa(this);
+    }
+    
+    
+    /**
+    * Devuelve los kilómetros recorridos durante la reserva.
     * @returns {number}
     */
-    public calcularKmTotales(): number{
-        let kmTotal = 0;
-        kmTotal = this.cliente.devolverVehiculo(this.vehiculo) - this.kmInicial;
-        return kmTotal;
+    public calcularKmRecorridos(): number{
+        let kmRecorridos = Math.floor((Math.random() * 651) + 50);
+        return kmRecorridos;
     }
 
     /**
@@ -101,12 +134,12 @@ export default class Reserva{
     * @returns {number} 
     */
     public calcularDiasTotales(): number {
-    const inicio = moment(this.fechaInicio);
-    const fin = moment(this.fechaFin);
+        const inicio = moment(this.fechaInicio);
+        const fin = moment(this.fechaFin);
 
-    const dias = fin.diff(inicio, "days");
+        const dias = fin.diff(inicio, "days");
 
-    return dias;
-}
+        return dias;
+    }
 
 }

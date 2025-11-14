@@ -2,6 +2,8 @@ import Vehiculo from "./vehiculos/vehiculo";
 import Reserva from "./reserva";
 import Cliente from "./cliente";
 import SolicitudReserva from "./solicitudReserva";
+import moment, { max, min } from "moment";
+
 /**
 Administra clientes, vehículos y reservas.  
 Permite verificar disponibilidad y gestionar las listas.
@@ -11,7 +13,7 @@ export default class Admin {
     private clientes: Array<Cliente>;
     private reservas: Array<Reserva>;
     private vehiculos: Array<Vehiculo>;
-
+    
     /**
     * @constructor
     * Inicializa el administrador con colecciones vacías de clientes, reservas y vehículos.
@@ -28,8 +30,8 @@ export default class Admin {
     * @param {Vehiculo} Vehiculo a evaluar.
     * @returns {boolean}
     */
-    public chequearDisponibilidad(vehiculo: Vehiculo):boolean {
-        return vehiculo.getEstado().puedeSerAlquilado();
+    public chequearDisponibilidad(vehiculo: Vehiculo, fechaInicioSolicitada: Date, fechaFinSolicitada: Date):boolean {
+        return vehiculo.puedeSerAlquilado(fechaInicioSolicitada, fechaFinSolicitada);
     }
 
     /**
@@ -40,11 +42,205 @@ export default class Admin {
     */
 
     public generarReserva(solicitudReserva: SolicitudReserva):void {
-        if (this.chequearDisponibilidad(solicitudReserva.getVehiculo())){
+        if (this.chequearDisponibilidad(solicitudReserva.getVehiculo(), solicitudReserva.getFechaInicio(), solicitudReserva.getFechaFin())){
             let nuevaReserva = new Reserva(solicitudReserva.getCliente(), solicitudReserva.getVehiculo(), solicitudReserva.getFechaInicio(), solicitudReserva.getFechaFin());
             this.reservas.push(nuevaReserva);
+            solicitudReserva.getVehiculo().agregarReserva(nuevaReserva);
         }
     }
+
+
+    /**
+    * Pone en estado alquiler los vehiculos que comienzan una reserva ese día.
+    */
+    public altasAlquileresDelDia(): void{
+        this.reservas.forEach(reserva => {
+            if(reserva.getFechaInicioFormateada() == moment().format("DD/MM/YYYY")){
+                reserva.getVehiculo().alquilar();
+            }
+        })
+    }
+
+    /**
+    * Calcula el porcentaje de vehiculos alquilados en un momento dado. 
+    * @param {Date} fechaPedida - Fecha que se desea evaluar
+    * @returns {number} porcentajeVehiculosAlquilados (0 a 100)
+    */
+    public obtenerOcupacionDeFlota(fechaPedida: Date): number{
+        let fechaMoment = moment(fechaPedida);
+        let reservasActivas : Array<Reserva> = [];
+
+        reservasActivas = this.reservas.filter((reserva) => { return fechaMoment.isBetween(
+            moment(reserva.getFechaInicio()), moment(reserva.getFechaFin()), undefined, '[]'
+        )})
+
+        const cantidadAlquileresActivos = reservasActivas.length;
+        
+        const vehiculosTotales = this.vehiculos.length;
+
+        const porcentajeVehiculosAlquilados = (cantidadAlquileresActivos/vehiculosTotales) * 100;
+
+        return porcentajeVehiculosAlquilados;
+    }
+    
+   
+    /**
+    * Devuelve los alquileres cumplidos en un rango de fechas dado 
+    * @param {Date} fechaPedida - Fecha que se desea evaluar
+    * @param {Date} fechaFin - Fecha que se desea evaluar
+    * @returns {Array<Reserva>} alquileresCumplidos
+    */
+    private obtenerAlquileresEnRango(fechaInicio: Date, fechaFin:Date): Reserva[]{
+        const fechaInicioMoment = moment(fechaInicio);
+        const fechaFinMoment = moment(fechaFin);
+        let alquileresCumplidos : Array<Reserva> = [];
+                    
+        alquileresCumplidos = this.reservas.filter((reserva) => { 
+            return (moment(reserva.getFechaInicio()).isSameOrBefore(fechaFinMoment) && 
+                    (moment(reserva.getFechaFin())).isSameOrAfter(fechaInicioMoment)
+            );
+        })
+        
+        return alquileresCumplidos;
+    } 
+
+    /**
+    * Toma una lista de alquileres y la agrupa contando cuantas veces aparece cada vehiculo.
+    * @param {Array<Reserva>} alquileres
+    * @returns {Map<Vehiculo,number>} - alquileresPorAuto
+    */
+    private contarAlquileresPorVehiculo(alquileres: Reserva[]): Map<Vehiculo,number>{
+        const alquileresPorAuto : Map <Vehiculo,number> = new Map();
+        alquileres.forEach(alquiler => {
+            let vehiculo : Vehiculo = alquiler.getVehiculo();
+           
+            if(alquileresPorAuto.has(vehiculo)){
+                let vecesAlquilado : number = alquileresPorAuto.get(vehiculo)!;
+                alquileresPorAuto.set(vehiculo, vecesAlquilado + 1);
+            } else {
+                alquileresPorAuto.set(vehiculo,1)
+            }
+        });
+        return alquileresPorAuto; 
+    }
+
+    /**
+    * Devuelve el vehiculo que mas veces fue alquilado
+    * @param {Map <Vehiculo,number>} autosAlquilados 
+    * @returns {Vehiculo} vehiculoMasAlquilado
+    */
+    private obtenerAutoMasAlquilado(autosAlquilados: Map <Vehiculo,number>): Vehiculo{            
+        let maxAlquileres : number = -1;
+        let vehiculoMasAlquilado : Vehiculo;
+        
+        for (const [vehiculo, vecesAlquilado] of autosAlquilados) {
+            if (vecesAlquilado > maxAlquileres) {
+                maxAlquileres = vecesAlquilado;
+                vehiculoMasAlquilado = vehiculo ;
+            }
+        }
+        return vehiculoMasAlquilado!;   
+    }
+
+    /**
+    * Devuelve el vehiculo que menos veces fue alquilado
+    * @param {Map <Vehiculo,number>} autosAlquilados 
+    * @returns {Vehiculo} vehiculoMenosAlquilado
+    */
+    private obtenerAutoMenosAlquilado(autosAlquilados: Map <Vehiculo,number>): Vehiculo{               
+        let minAlquileres : number = Infinity;
+        let vehiculoMenosAlquilado : Vehiculo;
+        
+        for (const [vehiculo, vecesAlquilado] of autosAlquilados) {
+            if (vecesAlquilado < minAlquileres) {
+                minAlquileres = vecesAlquilado;
+                vehiculoMenosAlquilado = vehiculo ;
+            }
+        }
+        return vehiculoMenosAlquilado!;     
+    }
+
+    /**
+    * Calcula el vehiculo más y menos alquilados en un período determinado. 
+    * @param {Date} fechaPedida - Fecha que se desea evaluar
+    * @param {Date} fechaFin - Fecha que se desea evaluar
+    * @returns {string} reporte
+    */
+    public obtenerEstadisticasVehiculosAlquilados(fechaInicio: Date, fechaFin: Date): string{
+        const alquileresEnRango = this.obtenerAlquileresEnRango(fechaInicio, fechaFin);
+        
+        if (alquileresEnRango.length === 0) {
+            //lanzar excepcion
+            throw new Error( "No hubo alquileres en el rango de fechas dado");
+        }
+
+        const alquileresPorVehiculo = this.contarAlquileresPorVehiculo(alquileresEnRango);
+        const vehiculoMasAlquilado = this.obtenerAutoMasAlquilado(alquileresPorVehiculo);
+        const vehiculoMenosAlquilado = this.obtenerAutoMenosAlquilado(alquileresPorVehiculo);
+        
+        return `Fecha de inicio : ${moment(fechaInicio)},
+                Fecha Fin: ${moment(fechaFin)},
+                Vehiculo más alquilado: ${vehiculoMasAlquilado.getMatricula()},
+                Vehiculo menos alquilado: ${vehiculoMenosAlquilado.getMatricula()}
+                `;
+    }
+
+    /**
+    * Devuelve los costos de mantenimiento de cada vehículo.
+    * @returns {Map <Vehiculo,number>}
+    */
+    public obtenerCostosMantenimiento(): Map<Vehiculo,number>{
+        const costosPorVehiculo : Map<Vehiculo,number> = new Map();
+        let costoMantenimiento = Math.floor((Math.random() * 101) + 50);
+        this.vehiculos.forEach(vehiculo => {
+            let costosMant = vehiculo.getCantMantenimiento()*costoMantenimiento;
+            costosPorVehiculo.set(vehiculo, costosMant);
+        })
+        return costosPorVehiculo;
+    }
+
+    /**
+    * Devuelve las ganancias por alquiler de cada vehículo.
+    * @returns {Map <Vehiculo,number>}
+    */
+    public obtenerGananciasAlquileres(): Map<Vehiculo,number>{
+        const gananciasPorVehiculo : Map<Vehiculo,number> = new Map();
+        this.reservas.forEach(reserva => {
+            if(gananciasPorVehiculo.has(reserva.getVehiculo())){
+                let tarifa : number = gananciasPorVehiculo.get(reserva.getVehiculo())!;
+                gananciasPorVehiculo.set(reserva.getVehiculo(), tarifa + reserva.calcularTarifaReserva());
+            } else {
+                gananciasPorVehiculo.set(reserva.getVehiculo(), reserva.calcularTarifaReserva());
+            }
+        })
+        return gananciasPorVehiculo;
+    }
+
+    /**
+    * Calcula el vehiculo más y menos rentable. 
+    * @returns {string} reporte
+    */
+    public obtenerRentabilidad(costos: Map<Vehiculo,number>, ganancias: Map<Vehiculo,number>): string{
+        let maxRentabilidad: number = -1;
+        let minRentabilidad: number = 100000;
+        let vehiculoMasRentable: Vehiculo;
+        let vehiculoMenosRentable: Vehiculo;
+        for(const [vehiculo, ganancia] of ganancias){
+            let rentabilidad = ganancia - costos.get(vehiculo)!;
+            if(rentabilidad > maxRentabilidad){
+                maxRentabilidad = rentabilidad;
+                vehiculoMasRentable = vehiculo;
+            }
+            if(rentabilidad < minRentabilidad){
+                minRentabilidad = rentabilidad;
+                vehiculoMenosRentable = vehiculo;
+            }
+        }
+        return `Vehiculo más rentable: ${vehiculoMasRentable!.getMatricula()},
+                Vehiculo menos rentable: ${vehiculoMenosRentable!.getMatricula()}
+                `;
+    }
+
 
     /**
     * Devuelve la lista de clientes.

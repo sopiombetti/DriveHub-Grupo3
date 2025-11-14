@@ -1,5 +1,7 @@
+import moment from "moment";
 import Disponible from "../estados/disponible";
 import IEstado from "../estados/estado";
+import Reserva from "../reserva";
 
 /**
  * Clase abstracta de un vehiculo
@@ -8,11 +10,16 @@ import IEstado from "../estados/estado";
 export default abstract class Vehiculo {
 
     protected matricula : string;
-    protected estado : IEstado ;
+    protected estado : IEstado;
     protected kilometraje: number; 
     protected tarifaBase : number;
     protected valorCargoExtra: number;
     protected valorCargoExtraSeguro: number;
+    protected kmDesdeUltimoMant: number;
+    protected fechaUltimoMant: Date;
+    protected alquileresCompletados: number;
+    protected reservasConfirmadas: Array<Reserva>;
+    protected cantMantenimientos: number;
 
     /**
      * constructor para instanciar objetos de las clases derivadas de vehiculo
@@ -29,6 +36,60 @@ export default abstract class Vehiculo {
         this.tarifaBase = 0;
         this.valorCargoExtra = 0;
         this.valorCargoExtraSeguro = 0;
+        this.kmDesdeUltimoMant = 0;
+        this.fechaUltimoMant = moment().toDate();
+        this.alquileresCompletados = 0;
+        this.reservasConfirmadas = [];
+        this.cantMantenimientos = 0;
+    }
+
+
+    public getCantMantenimiento(): number{
+        return this.cantMantenimientos;
+    }
+
+    public sumarCantMantenimiento(): void{
+        this.cantMantenimientos++;
+    }
+
+    public getReservasConfirmadas(): Array<Reserva>{
+        return this.reservasConfirmadas;
+    }
+
+    public agregarReserva(reserva: Reserva): void{
+        this.reservasConfirmadas.push(reserva);
+    }
+
+    public getKmDesdeUltimoMant(): number{
+        return this.kmDesdeUltimoMant;
+    }
+
+    public getFechaUltimoMant(): Date{
+        return this.fechaUltimoMant;
+    }
+
+    public getAlquileresCompletado(): number{
+        return this.alquileresCompletados;
+    }
+
+    public setKmDesdeUltimoMant(km: number): void{
+        this.kmDesdeUltimoMant = km;
+    }
+
+    public actualizarKmDesdeUltMant(km: number): void{
+        this.kmDesdeUltimoMant += km;
+    }
+
+    public setFechaUltimoMant(fecha: Date): void{
+        this.fechaUltimoMant = fecha;
+    }
+
+    public resetAlquileresCompletado(): void{
+        this.alquileresCompletados = 0;
+    }
+
+    public sumarAlquiler(): void{
+        this.alquileresCompletados++;
     }
     
     /**
@@ -88,8 +149,8 @@ export default abstract class Vehiculo {
      * Establece el kilómetraje del vehículo
      * @param {number} km - el kilometraje del vehículo 
      */
-    public setKilometraje(km:number):void {
-        this.kilometraje = km;
+    public actualizarKilometraje(km:number):void {
+        this.kilometraje += km;
     }
 
     /**
@@ -114,6 +175,33 @@ export default abstract class Vehiculo {
      */
     public cambiarEstado(estado: IEstado): void{
         this.estado = estado;
+    }
+
+    public alquilar(): void{
+        this.estado.alquilar();
+    }
+
+    public ponerEnMantenimiento(): void{
+        this.estado.ponerEnMantenimiento();
+    }
+
+    public ponerDisponible(): void{
+        this.estado.ponerDisponible();
+    }
+
+    public puedeSerAlquilado(fechaInicioSolicitada: Date, fechaFinSolicitada: Date): boolean{
+        let puedeSerAlquilado = true;
+        let i = 0;
+        while(puedeSerAlquilado && i < this.reservasConfirmadas.length){
+            const reserva = this.reservasConfirmadas[i];
+            const inicioReserva = moment(reserva.getFechaInicio());
+            const finReserva = moment(reserva.getFechaFin());
+            if(moment(fechaInicioSolicitada).isBefore(finReserva) && moment(fechaFinSolicitada).isAfter(inicioReserva)){
+                puedeSerAlquilado = false;
+            }
+            i++;
+        }
+        return puedeSerAlquilado;
     }
 
     /**

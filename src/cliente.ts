@@ -19,19 +19,6 @@ export default class Cliente extends Persona{
         super(nombre, dni, email);
     }
 
-    /**
-    * Solicita una reserva de un vehículo (método en proceso).
-    */
-
-    /**
-     * Registra la devolución de un vehículo por parte del cliente.
-     * Retorna el kilometraje del auto al ser devuelto.
-     * @param {Vehiculo} vehiculo - el vehículo que devuelve el cliente
-     * @returns {number} - kilometraje del vehículo al momento de la devolución
-     */
-    public devolverVehiculo(vehiculo: Vehiculo): number{
-        return vehiculo.getKilometraje();
-    }
 
     // En este momento el cliente le indica verbalmente al admin cual vehiculo quiere y en que fechas.
     public generarSolicitud(vehiculo:Vehiculo, fechaInicio:Date, fechaFin:Date) {

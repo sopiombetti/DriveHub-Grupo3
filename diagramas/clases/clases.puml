@@ -1,0 +1,136 @@
+@startuml diagrama
+
+title Trabajo Práctico - Plataforma Alquiler de Vehículos
+
+abstract class Vehiculo{
+    # matricula : string
+    # estado : IEstado 
+    # kilometraje: number 
+    # tarifaBase : number
+    # valorCargoExtra: number
+    # valorCargoExtraSeguro: number
+    # kmDesdeUltimoMant: number
+    # fechaUltimoMant: Date
+    # alquileresCompletados: number
+    # reservasConfirmadas: Array<Reserva>
+    # cantMantenimientos: number
+
+    + cambiarEstado(estado: IEstado)
+    + alquilar()
+    + ponerEnMantenimiento()
+    + ponerDisponible()
+    + condicionCargosExtra(kmTotales: number, diasTotales:number)
+    + gettersYSetters()
+}
+
+class Compacto extends Vehiculo{
+    + condicionCargosExtra(kmTotales: number, diasTotales:number)
+}
+
+class Sedan extends Vehiculo{
+    + condicionCargosExtra(kmTotales: number, diasTotales:number)
+}
+class Suv extends Vehiculo{
+    + condicionCargosExtra(kmTotales: number, diasTotales:number)
+}
+
+interface IEstado{
+    alquilar()
+    ponerEnMantenimiento()
+    ponerDisponible()
+}
+
+class Disponible implements IEstado{
+}
+
+class Alquilado implements IEstado{
+}
+
+class Mantenimiento implements IEstado{
+}
+
+abstract class Persona{
+    - nombre : string
+    - dni : string 
+    - email : string
+
+    +gettersYsetters()
+}
+
+class Cliente extends Persona{
+    + generarSolicitud(vehiculo, fechaInicio, fechaFin)
+}
+
+interface Temporada {
+    getPorcentajeTarifa()
+}
+
+class TemporadaAlta implements Temporada{
+
+}
+
+class TemporadaMedia implements Temporada{
+    
+}
+
+class TemporadaBaja implements Temporada{
+    
+}
+
+class Reserva{
+    
+    - cliente : Cliente 
+    - vehiculo : Vehiculo
+    - fechaInicio : date
+    - fechaFin : date
+    - temporada: Temporada
+
+    + gettersYsetters()
+    + setTemporada(temporada: Temporada)
+    + terminarReserva()
+    + calcularTarifaReserva()
+    + calcularDiasTotales()
+    + calcularKmRecorridos()
+}
+
+class CalculadoraTarifa{
+    + calcularTarifa(reserva: Reserva)
+}
+
+
+class Admin {
+    - clientes : Array<Cliente>
+    - reservas : Array<Reserva>
+    - vehiculo : Array<Vehiculo>
+
+    + chequearDisponibilidad()
+    + generarReserva()
+    + altasAlquileresDelDia()
+    + obtenerOcupacionDeFlota()
+    - obtenerAlquileresEnRango()
+    - contarAlquileresPorVehiculo()
+    - obtenerAutoMasAlquilado()
+    - obtenerAutoMenosAlquilado()
+    + obtenerEstadisticasVehiculosAlquilados()
+    + obtenerCostosMantenimiento()
+    + obtenerGananciasAlquileres()
+    + obtenerRentabilidad()
+    + agregarCliente()
+    + quitarCliente()
+    + agregarVehiculo()
+    + quitarVehiculo()
+    + gettersYsetters()
+}
+
+Vehiculo*-l-IEstado
+Admin*-r-Cliente
+Admin*-l-Reserva
+Admin*--Vehiculo
+Reserva*--Vehiculo
+Reserva*--Cliente
+Reserva*--Temporada
+Reserva --> CalculadoraTarifa
+
+
+
+@enduml

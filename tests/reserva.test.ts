@@ -1,6 +1,8 @@
 import Reserva from '../src/reserva';
 import Cliente from '../src/cliente'; 
 import Vehiculo from '../src/vehiculos/vehiculo';
+import TemporadaAlta from '../src/temporadas/temporadaAlta';
+import Temporada from '../src/temporadas/temporada';
 
 class MockVehiculo extends Vehiculo {
     constructor() {
@@ -11,7 +13,6 @@ class MockVehiculo extends Vehiculo {
         return false; 
     }
 }
-
 
 class MockCliente extends Cliente {
     constructor() {
@@ -24,6 +25,11 @@ class MockCliente extends Cliente {
     }
 }
 
+type TemporadaLike = Pick<
+  Temporada,
+  "getPorcentajeTarifa"
+>;
+
 describe('Test Clase Reserva', () => {
     
     let mockCliente: MockCliente;
@@ -31,6 +37,9 @@ describe('Test Clase Reserva', () => {
     let fechaInicio: Date;
     let fechaFin: Date;
     let reserva: Reserva;
+    let temporadaAltaMock: jest.Mocked<TemporadaLike>;
+    let temporadaMediaMock: jest.Mocked<TemporadaLike>;
+    let temporadaBajaMock: jest.Mocked<TemporadaLike>;
         
     beforeEach(() => {
         mockCliente = new MockCliente();
@@ -39,6 +48,18 @@ describe('Test Clase Reserva', () => {
         fechaFin = new Date('2025-10-25');
 
         reserva = new Reserva(mockCliente, mockVehiculo, fechaInicio, fechaFin);
+
+        temporadaAltaMock = {
+            getPorcentajeTarifa: jest.fn().mockReturnValue(1.2)
+        }
+
+        temporadaMediaMock = {
+            getPorcentajeTarifa: jest.fn().mockReturnValue(1)
+        }
+
+        temporadaBajaMock = {
+            getPorcentajeTarifa: jest.fn().mockReturnValue(0.9)
+        }
     });  
         
     it('debería ser una instancia de Reserva', () => {
@@ -54,23 +75,22 @@ describe('Test Clase Reserva', () => {
         expect(reserva.getFechaFin()).toBe(fechaFin);
     });
 
+    it('Cambio de temporada - Alta', () => {
+        reserva.setTemporada(temporadaAltaMock);
+        expect(reserva.getTemporada().getPorcentajeTarifa()).toBe(1.2);
+    })
+
+    it('Cambio de temporada - Baja', () => {
+        reserva.setTemporada(temporadaBajaMock);
+        expect(reserva.getTemporada().getPorcentajeTarifa()).toBe(0.9);
+    })
+
     it('debería calcular correctamente el número de días totales de la reserva', () => {
        
         const diasTotales = reserva.calcularDiasTotales();
         const diasEsperados = 5;
     
         expect(diasTotales).toBe(diasEsperados);
-
-    });
-
-    it('debería calcular correctamente los kilómetros totales recorridos', () => {
-        
-        const kmTotalesCalculados = reserva.calcularKmTotales();
-
-        const kmInicialEsperado = 10000;
-        const kmFinalSimulado = 12000;
-        const kmTotalesEsperados = kmFinalSimulado - kmInicialEsperado;
-        expect(kmTotalesCalculados).toBe(kmTotalesEsperados);
 
     });
 
