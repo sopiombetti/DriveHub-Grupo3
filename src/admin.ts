@@ -13,7 +13,7 @@ export default class Admin {
     private clientes: Array<Cliente>;
     private reservas: Array<Reserva>;
     private vehiculos: Array<Vehiculo>;
-
+    
     /**
     * @constructor
     * Inicializa el administrador con colecciones vacías de clientes, reservas y vehículos.
@@ -61,7 +61,153 @@ export default class Admin {
         })
     }
 
+    /**
+    * Calcula el porcentaje de vehiculos alquilados en un momento dado. 
+    * @param {Date} fechaPedida - Fecha que se desea evaluar
+    * @returns {number} porcentajeVehiculosAlquilados (0 a 100)
+    */
+    public obtenerOcupacionDeFlota(fechaPedida: Date): number{
+        let fechaMoment = moment(fechaPedida);
+        let reservasActivas : Array<Reserva> = [];
 
+        reservasActivas = this.reservas.filter((reserva) => { return fechaMoment.isBetween(
+            moment(reserva.getFechaInicio()), moment(reserva.getFechaFin()), undefined, '[]'
+        )})
+
+        const cantidadAlquileresActivos = reservasActivas.length;
+        
+        const vehiculosTotales = this.vehiculos.length;
+
+        const porcentajeVehiculosAlquilados = (cantidadAlquileresActivos/vehiculosTotales) * 100;
+
+        return porcentajeVehiculosAlquilados;
+    }
+    
+   
+    /**
+    * Devuelve los alquileres cumplidos en un rango de fechas dado 
+    * @param {Date} fechaPedida - Fecha que se desea evaluar
+    * @param {Date} fechaFin - Fecha que se desea evaluar
+    * @returns {Array<Reserva>} alquileresCumplidos
+    */
+    private obtenerAlquileresEnRango(fechaInicio: Date, fechaFin:Date): Reserva[]{
+        const fechaInicioMoment = moment(fechaInicio);
+        const fechaFinMoment = moment(fechaFin);
+        let alquileresCumplidos : Array<Reserva> = [];
+                    
+        alquileresCumplidos = this.reservas.filter((reserva) => { 
+            return (moment(reserva.getFechaInicio()).isSameOrBefore(fechaFinMoment) && 
+                    (moment(reserva.getFechaFin())).isSameOrAfter(fechaInicioMoment)
+            );
+        })
+        
+        return alquileresCumplidos;
+    } 
+
+    /**
+    * Toma una lista de alquileres y la agrupa contando cuantas veces aparece cada vehiculo.
+    * @param {Array<Reserva>} alquileres
+    * @returns {Map<Vehiculo,number>} - alquileresPorAuto
+    */
+    private contarAlquileresPorVehiculo(alquileres: Reserva[]): Map<Vehiculo,number>{
+        const alquileresPorAuto : Map <Vehiculo,number> = new Map();
+        alquileres.forEach(alquiler => {
+            let vehiculo : Vehiculo = alquiler.getVehiculo();
+           
+            if(alquileresPorAuto.has(vehiculo)){
+                let vecesAlquilado : number = alquileresPorAuto.get(vehiculo)!;
+                alquileresPorAuto.set(vehiculo, vecesAlquilado + 1);
+            } else {
+                alquileresPorAuto.set(vehiculo,1)
+            }
+        });
+        return alquileresPorAuto; 
+    }
+
+    /**
+    * Devuelve el vehiculo que mas veces fue alquilado
+    * @param {Map <Vehiculo,number>} autosAlquilados 
+    * @returns {Vehiculo} vehiculoMasAlquilado
+    */
+    private obtenerAutoMasAlquilado(autosAlquilados: Map <Vehiculo,number>): Vehiculo{            
+        let maxAlquileres : number = -1;
+        let vehiculoMasAlquilado : Vehiculo;
+        
+        for (const [vehiculo, vecesAlquilado] of autosAlquilados) {
+            if (vecesAlquilado > maxAlquileres) {
+                maxAlquileres = vecesAlquilado;
+                vehiculoMasAlquilado = vehiculo ;
+            }
+        }
+        return vehiculoMasAlquilado!;   
+    }
+
+    /**
+    * Devuelve el vehiculo que menos veces fue alquilado
+    * @param {Map <Vehiculo,number>} autosAlquilados 
+    * @returns {Vehiculo} vehiculoMenosAlquilado
+    */
+    private obtenerAutoMenosAlquilado(autosAlquilados: Map <Vehiculo,number>): Vehiculo{               
+        let minAlquileres : number = Infinity;
+        let vehiculoMenosAlquilado : Vehiculo;
+        
+        for (const [vehiculo, vecesAlquilado] of autosAlquilados) {
+            if (vecesAlquilado < minAlquileres) {
+                minAlquileres = vecesAlquilado;
+                vehiculoMenosAlquilado = vehiculo ;
+            }
+        }
+        return vehiculoMenosAlquilado!;     
+    }
+    /**
+    * Calcula el vehiculo más y menos alquilados en un período determinado. 
+    * @param {Date} fechaPedida - Fecha que se desea evaluar
+    * @param {Date} fechaFin - Fecha que se desea evaluar
+    * @returns ??
+    */
+    public obtenerEstadisticasVehiculosAlquilados(fechaInicio: Date, fechaFin: Date): string{
+        const alquileresEnRango = this.obtenerAlquileresEnRango(fechaInicio, fechaFin);
+        
+        if (alquileresEnRango.length === 0) {
+            //lanzar excepcion
+            throw new Error( "No hubo alquileres en el rango de fechas dado");
+        }
+
+        const alquileresPorVehiculo = this.contarAlquileresPorVehiculo(alquileresEnRango);
+        const vehiculoMasAlquilado = this.obtenerAutoMasAlquilado(alquileresPorVehiculo);
+        const vehiculoMenosAlquilado = this.obtenerAutoMenosAlquilado(alquileresPorVehiculo);
+        
+        return `Fecha de inicio : ${moment(fechaInicio)},
+                Fecha Fin: ${moment(fechaFin)},
+                Vehiculo más alquilado: ${vehiculoMasAlquilado.getMatricula()},
+                Vehiculo menos alquilado: ${vehiculoMasAlquilado.getMatricula()}
+                `;
+    }
+
+    /* 
+        Rentabilidad por Vehículo: El automóvil que generó la mayor y menor rentabilidad
+        (ingresos por alquiler - costos de mantenimiento).
+        
+    */
+
+    public obtenerMasRentable(): Vehiculo{
+        let maxRentable : number = -1;
+        let vehiculoMasRentable : string = "";
+        
+        return this.vehiculos[1] ;
+    }
+    
+    public obtenerMenosRentable(): Vehiculo{
+        let minRentable : number =  Infinity;
+        let vehiculoMenosRentable : string = "";
+        
+        return this.vehiculos[1] ;
+    }
+
+    public obtenerCostosMantenimiento():number{
+        let costoMantenimiento = Math.floor((Math.random() * 101) + 50);
+        return costoMantenimiento;
+    }
     /**
     * Devuelve la lista de clientes.
     * @returns {Array<Cliente>}
