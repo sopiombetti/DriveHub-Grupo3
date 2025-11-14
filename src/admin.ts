@@ -13,7 +13,7 @@ export default class Admin {
     private clientes: Array<Cliente>;
     private reservas: Array<Reserva>;
     private vehiculos: Array<Vehiculo>;
-
+    
     /**
     * @constructor
     * Inicializa el administrador con colecciones vacías de clientes, reservas y vehículos.
@@ -83,62 +83,7 @@ export default class Admin {
         return porcentajeVehiculosAlquilados;
     }
     
-
-    // RECORTAR ESTO POR FAVOR, METODO DE 300 LINEAS    
-
-    /**
-    * Calcula el vehiculo más y menos alquilados en un período determinado. 
-    * @param {Date} fechaPedida - Fecha que se desea evaluar
-    * @param {Date} fechaFin - Fecha que se desea evaluar
-    * @returns 
-    */
-    /*
-    public obtenerEstadisticasVehiculosAlquilados(fechaInicio: Date, fechaFin: Date): string{
-        const fechaInicioMoment = moment(fechaInicio);
-        const fechaFinMoment = moment(fechaFin);
-        let alquileresCumplidos : Array<Reserva> = [];
-                    
-        alquileresCumplidos = this.reservas.filter((reserva) => { 
-            return (moment(reserva.getFechaInicio()).isSameOrBefore(fechaFinMoment) && 
-                    (moment(reserva.getFechaFin())).isSameOrAfter(fechaInicioMoment)
-            );
-        }
-        )    
-
-        let alquileresPorAuto : Map <string,number> = new Map();
-    
-        alquileresCumplidos.forEach(alquilerCumplido => {
-            let matricula : string = alquilerCumplido.getVehiculo().getMatricula();
-           
-            if(alquileresPorAuto.has(matricula)){
-                let vecesAlquilado : number = alquileresPorAuto.get(matricula)!;
-                alquileresPorAuto.set(matricula, vecesAlquilado + 1);
-            } else {
-                alquileresPorAuto.set(matricula,1)
-            }
-        });
-                
-        let maxAlquileres : number = -1;
-        let minAlquileres  : number = Infinity; 
-        let vehiculoMasAlquilado : string = "";
-        let vehiculoMenosAlquilado : string = "";
-
-        for (const [matricula, vecesAlquilado] of alquileresPorAuto) {
-            if (vecesAlquilado > maxAlquileres) {
-                maxAlquileres = vecesAlquilado;
-                vehiculoMasAlquilado = matricula;
-            }
-            if (vecesAlquilado < minAlquileres) {
-                minAlquileres = vecesAlquilado;
-                vehiculoMenosAlquilado = matricula;
-            }
-        }
-            //very bad !!! :C
-        return `${vehiculoMasAlquilado}|${vehiculoMenosAlquilado}`;
-
-    }
-    */
-    
+   
     /**
     * Devuelve los alquileres cumplidos en un rango de fechas dado 
     * @param {Date} fechaPedida - Fecha que se desea evaluar
@@ -212,7 +157,6 @@ export default class Admin {
                 vehiculoMenosAlquilado = vehiculo ;
             }
         }
-
         return vehiculoMenosAlquilado!;     
     }
     /**
@@ -232,8 +176,12 @@ export default class Admin {
         const alquileresPorVehiculo = this.contarAlquileresPorVehiculo(alquileresEnRango);
         const vehiculoMasAlquilado = this.obtenerAutoMasAlquilado(alquileresPorVehiculo);
         const vehiculoMenosAlquilado = this.obtenerAutoMenosAlquilado(alquileresPorVehiculo);
-
-        return "estadisticas";
+        
+        return `Fecha de inicio : ${moment(fechaInicio)},
+                Fecha Fin: ${moment(fechaFin)},
+                Vehiculo más alquilado: ${vehiculoMasAlquilado.getMatricula()},
+                Vehiculo menos alquilado: ${vehiculoMasAlquilado.getMatricula()}
+                `;
     }
 
     /* 

@@ -13,18 +13,222 @@ class MockVehiculo extends Vehiculo{
         return true;
     }
 }
+class ReservaMock extends Reserva{
 
+}
 class MockCliente extends Cliente{
 }
 
 describe('Tests clase Admin', () => {
     let admin: Admin;
+    let reservaMock: Reserva;
+    let reservaMockDos:Reserva;
+    let reservaMockTres: Reserva;
+    let mockVehiculo1: MockVehiculo;
+    let mockVehiculo2: MockVehiculo;
+    let mockVehiculo3: MockVehiculo;
 
     beforeEach(() => {
         admin = new Admin();
+        
+        mockVehiculo1 = new MockVehiculo('AUTO-UNO', 10);
+        mockVehiculo2 = new MockVehiculo('AUTO-DOS', 20);
+        mockVehiculo3 = new MockVehiculo('AUTO-TRES', 30);
+
+        reservaMock ={ 
+            getFechaInicio: jest.fn().mockReturnValue('2025-10-20T00:00:00Z'),
+            getFechaFin: jest.fn().mockReturnValue('2025-10-25T00:00:00Z'),
+            getVehiculo: jest.fn().mockReturnValue(mockVehiculo1)
+        }as unknown as Reserva;
+
+        reservaMockDos = { 
+            getFechaInicio: jest.fn().mockReturnValue('2025-10-07T00:00:00Z'),
+            getFechaFin: jest.fn().mockReturnValue('2025-10-28T00:00:00Z'),
+            getVehiculo: jest.fn().mockReturnValue(mockVehiculo2)
+
+        }as unknown as Reserva;
+
+        reservaMockTres = {    
+            getFechaInicio: jest.fn().mockReturnValue('2025-10-08T00:00:00Z'),
+            getFechaFin: jest.fn().mockReturnValue('2025-10-18T00:00:00Z'),
+            getVehiculo: jest.fn().mockReturnValue(mockVehiculo3)
+
+        }as unknown as Reserva;
+
     });
 
+    describe('obtenerAlquileresEnRango', () => {
+        it('debe devolver solo las reservas que se solapan con el rango de fechas', () => {
+            const fechaInicio = new Date('2025-10-10T00:00:00Z');
+            const fechaFin = new Date('2025-10-20T00:00:00Z');
+            admin['reservas'] = [reservaMock, reservaMockDos,reservaMockTres];
+            const resultado = (admin as any).obtenerAlquileresEnRango(fechaInicio, fechaFin);
 
+            expect(resultado.length).toBe(3);
+            expect(resultado).toContain(reservaMock);
+            expect(resultado).toContain(reservaMockDos);
+            expect(resultado).toContain(reservaMockTres);
+        });
+
+        it('debe devolver solo la reserva que esta dentro del rango de fechas', () => {
+            const fechaInicio = new Date('2025-10-01T00:00:00Z');
+            const fechaFin = new Date('2025-10-19T00:00:00Z');
+            admin['reservas'] = [reservaMock, reservaMockDos,reservaMockTres];
+            const resultado = (admin as any).obtenerAlquileresEnRango(fechaInicio, fechaFin);
+
+            expect(resultado.length).toBe(2);
+            expect(resultado).not.toContain(reservaMock);
+            expect(resultado).toContain(reservaMockDos);
+            expect(resultado).toContain(reservaMockTres);
+        });
+
+        it('debe devolver un array vacio si ninguna reserva coincide con las fechas', () => {
+            const fechaInicio = new Date('2025-12-01T00:00:00Z');
+            const fechaFin = new Date('2025-12-10T00:00:00Z');
+            admin['reservas'] = [reservaMock, reservaMockDos,reservaMockTres];
+
+            const resultado = (admin as any).obtenerAlquileresEnRango(fechaInicio, fechaFin);
+
+            expect(resultado.length).toBe(0);
+            expect(resultado).not.toContain(reservaMock);
+            expect(resultado).not.toContain(reservaMockDos);
+            expect(resultado).not.toContain(reservaMockTres);
+        });
+        
+        it('debe devolver un array vacío si la lista de reservas esta vacia', () => {
+            admin['reservas'] = [];
+            const fechaInicio = new Date('2025-10-10T00:00:00Z');
+            const fechaFin = new Date('2025-10-20T00:00:00Z');
+
+            const resultado = (admin as any).obtenerAlquileresEnRango(fechaInicio, fechaFin);
+            
+            expect(resultado.length).toBe(0);
+            expect(resultado).toEqual([]);
+        });
+
+    });
+    
+    describe('contarAlquileresPorVehiculo', () => {
+
+        it('debe contar correctamente la cantidad de alquileres para cada vehículo ', () => {
+            const alquileres = [reservaMock, reservaMockDos, reservaMockTres];
+            const resultado = (admin as any).contarAlquileresPorVehiculo(alquileres);
+            expect(resultado.size).toBe(3);
+            expect(resultado.get(mockVehiculo1)).toBe(1);
+            expect(resultado.get(mockVehiculo2)).toBe(1);
+            expect(resultado.get(mockVehiculo3)).toBe(1);
+        });
+
+        it('debe contar correctamente si un vehiculo se repite', () => {
+            const alquileres = [reservaMock, reservaMockDos, reservaMock,reservaMock];
+            
+            const resultado = (admin as any).contarAlquileresPorVehiculo(alquileres);
+
+            expect(resultado.size).toBe(2);
+            expect(resultado.get(mockVehiculo1)).toBe(3);
+            expect(resultado.get(mockVehiculo2)).toBe(1);
+        });
+
+        it('debe devolver un mapa vacio si la lista de alquileres esta vacia', () => {
+            const alquileres: Reserva[] = [];
+            const resultado = (admin as any).contarAlquileresPorVehiculo(alquileres);
+            
+            expect(resultado.size).toBe(0);
+        });
+    });
+
+    describe('obtenerAutoMasAlquilado', () => {
+        it('debe devolver el vehiculo mas veces alquilado', () => {
+            const autosAlquilados = new Map<Vehiculo, number>([
+                [mockVehiculo1, 2],
+                [mockVehiculo2, 8],
+                [mockVehiculo3, 1]
+            ]);
+            const resultado = (admin as any).obtenerAutoMasAlquilado(autosAlquilados);
+            expect(resultado).toBe(mockVehiculo2);
+        });
+
+        it('debe devolver el primer vehiculo en caso de que exista otro con la misma cantidad', () => {
+             const conteo = new Map<Vehiculo, number>([
+                [mockVehiculo1, 5],
+                [mockVehiculo2, 5],
+                [mockVehiculo3, 1]
+            ]);
+            const resultado = (admin as any).obtenerAutoMasAlquilado(conteo);
+            expect(resultado).toBe(mockVehiculo1);
+        });
+        
+        it('debe devolver undefined si el mapa esta vacio', () => {
+            const conteo = new Map<Vehiculo, number>();
+            const resultado = (admin as any).obtenerAutoMasAlquilado(conteo);
+            expect(resultado).toBeUndefined();
+        });
+    });
+
+    describe('obtenerAutoMenosAlquilado', () => {
+        it('debe devolver el vehiculo menos veces alquilado', () => {
+            const autosAlquilados = new Map<Vehiculo, number>([
+                [mockVehiculo1, 2],
+                [mockVehiculo2, 5],
+                [mockVehiculo3, 1]
+            ]);
+            const resultado = (admin as any).obtenerAutoMenosAlquilado(autosAlquilados);
+            expect(resultado).toBe(mockVehiculo3);
+        });
+
+        it('debe devolver el primero en caso de que exista otro con la misma cantidad', () => {
+             const autosAlquilados = new Map<Vehiculo, number>([
+                [mockVehiculo2, 3],
+                [mockVehiculo1, 3],
+                [mockVehiculo3, 12]
+            ]);
+            const resultado = (admin as any).obtenerAutoMenosAlquilado(autosAlquilados);
+            expect(resultado).toBe(mockVehiculo2);
+        });
+        
+        it('debe devolver undefined si el mapa esta vacio', () => {
+            const autosAlquilados = new Map<Vehiculo, number>();
+            const resultado = (admin as any).obtenerAutoMenosAlquilado(autosAlquilados);
+            expect(resultado).toBeUndefined();
+        });
+    });
+    describe('obtenerEstadisticasVehiculosAlquilados', () =>{
+        it('debe lanzar una excepcion si obtenerAlquileresEnRango devuelve un array vacio', () => {
+            const fechaInicio = new Date('2025-01-01T00:00:00Z');
+            const fechaFin = new Date('2025-01-02T00:00:00Z');
+
+            const spyobtenerAlquileresEnRango = jest.spyOn(admin as any, 'obtenerAlquileresEnRango')
+                                 .mockReturnValue([]);
+            expect(() => {admin.obtenerEstadisticasVehiculosAlquilados(fechaInicio, fechaFin)}).toThrow("No hubo alquileres en el rango de fechas dado");
+            expect(spyobtenerAlquileresEnRango).toHaveBeenCalledWith(fechaInicio, fechaFin);
+        });
+
+    it('debe orquestar todos los metodos', () => {
+            const fechaInicio = new Date('2025-01-01T00:00:00Z');
+            const fechaFin = new Date('2025-01-02T00:00:00Z');
+
+            const mockAlquileres = [reservaMock, reservaMockDos];
+            const mockAutosAlquilados = new Map<Vehiculo, number>([[mockVehiculo1, 3], [mockVehiculo2, 2]]);
+
+            const spyobtenerAlquileresEnRango = jest.spyOn(admin as any, 'obtenerAlquileresEnRango')
+                                 .mockReturnValue(mockAlquileres);
+
+            const spycontarAlquileresPorVehiculo = jest.spyOn(admin as any, 'contarAlquileresPorVehiculo')
+                                 .mockReturnValue(mockAutosAlquilados);
+
+            const spyobtenerAutoMasAlquilado = jest.spyOn(admin as any, 'obtenerAutoMasAlquilado')
+                               .mockReturnValue(mockVehiculo2);
+            const spyobtenerAutoMenosAlquilado = jest.spyOn(admin as any, 'obtenerAutoMenosAlquilado')
+                               .mockReturnValue(mockVehiculo1);
+
+            const resultado = admin.obtenerEstadisticasVehiculosAlquilados(fechaInicio, fechaFin);
+
+            expect(spyobtenerAlquileresEnRango).toHaveBeenCalledWith(fechaInicio, fechaFin);
+            expect(spycontarAlquileresPorVehiculo).toHaveBeenCalledWith(mockAlquileres);
+            expect(spyobtenerAutoMasAlquilado).toHaveBeenCalledWith(mockAutosAlquilados);
+            expect(spyobtenerAutoMenosAlquilado).toHaveBeenCalledWith(mockAutosAlquilados);
+        });
+    });
     describe('chequearDisponibilidad', () => {
         const FECHA_INICIO = new Date('2025-10-01');
         const FECHA_FIN = new Date('2025-10-10');
@@ -168,9 +372,29 @@ describe('Tests clase Admin', () => {
             expect(() => admin.altasAlquileresDelDia()).not.toThrow();
         });
     });
+    describe('obtenerOcupacionDeFlota', () =>{
+        it('debe informar el porcentaje de los autos que se encuentren en alquiler según la fecha pedida ', () => {
+        let fechaPedida = new Date('2025-10-20T00:00:00Z');
+  
+        admin['reservas'] = [reservaMock,reservaMockDos,reservaMockTres];
+        
+        admin['vehiculos'] = [mockVehiculo1,mockVehiculo2,mockVehiculo3];
+        
+        const resultado = admin.obtenerOcupacionDeFlota(fechaPedida);
+        const resultadoEsperado = (2/3) * 100;
 
+        expect(resultado).toBe(resultadoEsperado);
+        expect(reservaMock.getFechaFin).toHaveBeenCalled();
+        expect(reservaMockDos.getFechaFin).toHaveBeenCalled();
+        expect(reservaMockTres.getFechaFin).toHaveBeenCalled();
+        expect(reservaMock.getFechaInicio).toHaveBeenCalled();
+        expect(reservaMockDos.getFechaInicio).toHaveBeenCalled();
+        expect(reservaMockTres.getFechaInicio).toHaveBeenCalled();
 
-
+        });
+    });
+   
+    
     it('Agregar un cliente nuevo al array', () => {
         const cliente = new MockCliente('Raul', '123', '@mail');
         admin.agregarCliente(cliente);
