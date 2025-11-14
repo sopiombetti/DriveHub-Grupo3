@@ -4,45 +4,49 @@ title Trabajo Práctico - Plataforma Alquiler de Vehículos
 
 abstract class Vehiculo{
     # matricula : string
-    # estado : Estado 
+    # estado : IEstado 
     # kilometraje: number 
     # tarifaBase : number
     # valorCargoExtra: number
-    + calcularExtra(kmTotales: number, diasTotales:number)
-    
+    # valorCargoExtraSeguro: number
+    # kmDesdeUltimoMant: number
+    # fechaUltimoMant: Date
+    # alquileresCompletados: number
+    # reservasConfirmadas: Array<Reserva>
+    # cantMantenimientos: number
+
+    + cambiarEstado(estado: IEstado)
+    + alquilar()
+    + ponerEnMantenimiento()
+    + ponerDisponible()
+    + condicionCargosExtra(kmTotales: number, diasTotales:number)
     + gettersYSetters()
 }
 
 class Compacto extends Vehiculo{
-    + calcularExtra(kmTotales: number, diasTotales:number)
-
+    + condicionCargosExtra(kmTotales: number, diasTotales:number)
 }
 
 class Sedan extends Vehiculo{
-    + calcularExtra(kmTotales: number, diasTotales:number)
+    + condicionCargosExtra(kmTotales: number, diasTotales:number)
 }
 class Suv extends Vehiculo{
-    + calcularExtra(kmTotales: number, diasTotales:number)
+    + condicionCargosExtra(kmTotales: number, diasTotales:number)
 }
 
-abstract class Estado{
-    + gettersYSetters()
+interface IEstado{
+    alquilar()
+    ponerEnMantenimiento()
+    ponerDisponible()
 }
 
-class Disponible extends Estado{
-
+class Disponible implements IEstado{
 }
 
-class Alquilado extends Estado{
-
+class Alquilado implements IEstado{
 }
 
-class Limpieza extends Estado{
-
-}
-
-class Mantenimiento extends Estado{
-
+class Mantenimiento implements IEstado{
 }
 
 abstract class Persona{
@@ -54,38 +58,45 @@ abstract class Persona{
 }
 
 class Cliente extends Persona{
-    
-    '+ solicitarReserva(vehiculo: Vehiculo)
-    ' Respecto a este método, queda en pausa. Revisar despues.
-    ' solicitud cliente -> evaluacion del admin -> generar reserva 
+    + generarSolicitud(vehiculo, fechaInicio, fechaFin)
+}
 
-    + devolverVehiculo(vehiculo: Vehiculo)
+interface Temporada {
+    getPorcentajeTarifa()
+}
+
+class TemporadaAlta implements Temporada{
+
+}
+
+class TemporadaMedia implements Temporada{
+    
+}
+
+class TemporadaBaja implements Temporada{
     
 }
 
 class Reserva{
     
-    -cliente : Cliente 
-    -vehiculo : Vehiculo
-    -kmInicio : number
-    -kmFin : number 
-    -fechaInicio : date
-    -fechaFin : date
-    -tieneCargosExtra : boolean
+    - cliente : Cliente 
+    - vehiculo : Vehiculo
+    - fechaInicio : date
+    - fechaFin : date
+    - temporada: Temporada
 
     + gettersYsetters()
+    + setTemporada(temporada: Temporada)
+    + terminarReserva()
+    + calcularTarifaReserva()
     + calcularDiasTotales()
-    + calcularKmTotales()
-
-
+    + calcularKmRecorridos()
 }
 
 class CalculadoraTarifa{
     + calcularTarifa(reserva: Reserva)
 }
 
-'Admin -> Permisos, CRUD 
-'AdminDriveHub -> Sistema de reservas
 
 class Admin {
     - clientes : Array<Cliente>
@@ -94,21 +105,32 @@ class Admin {
 
     + chequearDisponibilidad()
     + generarReserva()
-
+    + altasAlquileresDelDia()
+    + obtenerOcupacionDeFlota()
+    - obtenerAlquileresEnRango()
+    - contarAlquileresPorVehiculo()
+    - obtenerAutoMasAlquilado()
+    - obtenerAutoMenosAlquilado()
+    + obtenerEstadisticasVehiculosAlquilados()
+    + obtenerCostosMantenimiento()
+    + obtenerGananciasAlquileres()
+    + obtenerRentabilidad()
+    + agregarCliente()
+    + quitarCliente()
+    + agregarVehiculo()
+    + quitarVehiculo()
     + gettersYsetters()
 }
 
-Vehiculo*-l-Estado
+Vehiculo*-l-IEstado
 Admin*-r-Cliente
-Reserva*-r-Admin
+Admin*-l-Reserva
+Admin*--Vehiculo
 Reserva*--Vehiculo
-Reserva o-l-CalculadoraTarifa
+Reserva*--Cliente
+Reserva*--Temporada
+Reserva --> CalculadoraTarifa
 
-note left of CalculadoraTarifa
-    reserva.vehiculo.getTarifaBase() * 
-    reserva.calcularDiasTotales() + 
-    reserva.vehiculo.calcularExtra(reserva.calcularDiasTotales(), reserva.calcularDiasTotales());
-end note
 
 
 @enduml

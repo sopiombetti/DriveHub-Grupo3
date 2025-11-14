@@ -16,7 +16,6 @@ export default class Reserva{
     private vehiculo: Vehiculo;
     private fechaInicio: Date;
     private fechaFin: Date;
-    private kmInicial: number;
     private temporada: Temporada;
 
     /** 
@@ -33,7 +32,6 @@ export default class Reserva{
         this.vehiculo = vehiculo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.kmInicial = this.vehiculo.getKilometraje();
         this.temporada = new TemporadaMedia();
     }
     
