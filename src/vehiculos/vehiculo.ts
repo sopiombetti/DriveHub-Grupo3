@@ -19,7 +19,7 @@ export default abstract class Vehiculo {
     protected fechaUltimoMant: Date;
     protected alquileresCompletados: number;
     protected reservasConfirmadas: Array<Reserva>;
-    protected costoMantenimiento: number;
+    protected cantMantenimientos: number;
 
     /**
      * constructor para instanciar objetos de las clases derivadas de vehiculo
@@ -40,9 +40,17 @@ export default abstract class Vehiculo {
         this.fechaUltimoMant = moment().toDate();
         this.alquileresCompletados = 0;
         this.reservasConfirmadas = [];
-        this.costoMantenimiento = 40;
+        this.cantMantenimientos = 0;
     }
 
+
+    public getCantMantenimiento(): number{
+        return this.cantMantenimientos;
+    }
+
+    public sumarCantMantenimiento(): void{
+        this.cantMantenimientos++;
+    }
 
     public getReservasConfirmadas(): Array<Reserva>{
         return this.reservasConfirmadas;

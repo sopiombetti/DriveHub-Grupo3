@@ -2,7 +2,7 @@ import Vehiculo from "./vehiculos/vehiculo";
 import Reserva from "./reserva";
 import Cliente from "./cliente";
 import SolicitudReserva from "./solicitudReserva";
-import moment from "moment";
+import moment, { max, min } from "moment";
 
 /**
 Administra clientes, vehículos y reservas.  
@@ -159,11 +159,12 @@ export default class Admin {
         }
         return vehiculoMenosAlquilado!;     
     }
+
     /**
     * Calcula el vehiculo más y menos alquilados en un período determinado. 
     * @param {Date} fechaPedida - Fecha que se desea evaluar
     * @param {Date} fechaFin - Fecha que se desea evaluar
-    * @returns ??
+    * @returns {string} reporte
     */
     public obtenerEstadisticasVehiculosAlquilados(fechaInicio: Date, fechaFin: Date): string{
         const alquileresEnRango = this.obtenerAlquileresEnRango(fechaInicio, fechaFin);
@@ -180,34 +181,67 @@ export default class Admin {
         return `Fecha de inicio : ${moment(fechaInicio)},
                 Fecha Fin: ${moment(fechaFin)},
                 Vehiculo más alquilado: ${vehiculoMasAlquilado.getMatricula()},
-                Vehiculo menos alquilado: ${vehiculoMasAlquilado.getMatricula()}
+                Vehiculo menos alquilado: ${vehiculoMenosAlquilado.getMatricula()}
                 `;
     }
 
-    /* 
-        Rentabilidad por Vehículo: El automóvil que generó la mayor y menor rentabilidad
-        (ingresos por alquiler - costos de mantenimiento).
-        
+    /**
+    * Devuelve los costos de mantenimiento de cada vehículo.
+    * @returns {Map <Vehiculo,number>}
     */
-
-    public obtenerMasRentable(): Vehiculo{
-        let maxRentable : number = -1;
-        let vehiculoMasRentable : string = "";
-        
-        return this.vehiculos[1] ;
-    }
-    
-    public obtenerMenosRentable(): Vehiculo{
-        let minRentable : number =  Infinity;
-        let vehiculoMenosRentable : string = "";
-        
-        return this.vehiculos[1] ;
-    }
-
-    public obtenerCostosMantenimiento():number{
+    public obtenerCostosMantenimiento(): Map<Vehiculo,number>{
+        const costosPorVehiculo : Map<Vehiculo,number> = new Map();
         let costoMantenimiento = Math.floor((Math.random() * 101) + 50);
-        return costoMantenimiento;
+        this.vehiculos.forEach(vehiculo => {
+            let costosMant = vehiculo.getCantMantenimiento()*costoMantenimiento;
+            costosPorVehiculo.set(vehiculo, costosMant);
+        })
+        return costosPorVehiculo;
     }
+
+    /**
+    * Devuelve las ganancias por alquiler de cada vehículo.
+    * @returns {Map <Vehiculo,number>}
+    */
+    public obtenerGananciasAlquileres(): Map<Vehiculo,number>{
+        const gananciasPorVehiculo : Map<Vehiculo,number> = new Map();
+        this.reservas.forEach(reserva => {
+            if(gananciasPorVehiculo.has(reserva.getVehiculo())){
+                let tarifa : number = gananciasPorVehiculo.get(reserva.getVehiculo())!;
+                gananciasPorVehiculo.set(reserva.getVehiculo(), tarifa + reserva.calcularTarifaReserva());
+            } else {
+                gananciasPorVehiculo.set(reserva.getVehiculo(), reserva.calcularTarifaReserva());
+            }
+        })
+        return gananciasPorVehiculo;
+    }
+
+    /**
+    * Calcula el vehiculo más y menos rentable. 
+    * @returns {string} reporte
+    */
+    public obtenerRentabilidad(costos: Map<Vehiculo,number>, ganancias: Map<Vehiculo,number>): string{
+        let maxRentabilidad: number = -1;
+        let minRentabilidad: number = 100000;
+        let vehiculoMasRentable: Vehiculo;
+        let vehiculoMenosRentable: Vehiculo;
+        for(const [vehiculo, ganancia] of ganancias){
+            let rentabilidad = ganancia - costos.get(vehiculo)!;
+            if(rentabilidad > maxRentabilidad){
+                maxRentabilidad = rentabilidad;
+                vehiculoMasRentable = vehiculo;
+            }
+            if(rentabilidad < minRentabilidad){
+                minRentabilidad = rentabilidad;
+                vehiculoMenosRentable = vehiculo;
+            }
+        }
+        return `Vehiculo más rentable: ${vehiculoMasRentable!.getMatricula()},
+                Vehiculo menos rentable: ${vehiculoMenosRentable!.getMatricula()}
+                `;
+    }
+
+
     /**
     * Devuelve la lista de clientes.
     * @returns {Array<Cliente>}

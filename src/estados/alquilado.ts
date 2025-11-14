@@ -33,6 +33,7 @@ export default class Alquilado implements IEstado {
       public ponerDisponible(){
          if(this.necesitaMantenimiento()){
             this.vehiculo.cambiarEstado(new Mantenimiento(this.vehiculo));
+            this.vehiculo.sumarCantMantenimiento();
             this.vehiculo.resetAlquileresCompletado();
             this.vehiculo.setFechaUltimoMant(moment().toDate());
             this.vehiculo.setKmDesdeUltimoMant(0);

@@ -22,6 +22,7 @@ describe('Test Clase Alquilado',()=>{
             resetAlquileresCompletado: jest.fn(),
             setFechaUltimoMant: jest.fn(),
             setKmDesdeUltimoMant: jest.fn(),
+            sumarCantMantenimiento: jest.fn()
             } as unknown as jest.Mocked<Vehiculo>;
 
         estadoAlquilado = new Alquilado(vehiculoMock);
