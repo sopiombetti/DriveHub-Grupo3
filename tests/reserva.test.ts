@@ -1,7 +1,6 @@
 import Reserva from '../src/reserva';
 import Cliente from '../src/cliente'; 
 import Vehiculo from '../src/vehiculos/vehiculo';
-import TemporadaAlta from '../src/temporadas/temporadaAlta';
 import Temporada from '../src/temporadas/temporada';
 
 class MockVehiculo extends Vehiculo {
@@ -81,6 +80,11 @@ describe('Test Clase Reserva', () => {
     it('Cambio de temporada - Baja', () => {
         reserva.setTemporada(temporadaBajaMock);
         expect(reserva.getTemporada().getPorcentajeTarifa()).toBe(0.9);
+    })
+    
+    it('Cambio de temporada - Media', () => {
+        reserva.setTemporada(temporadaMediaMock);
+        expect(reserva.getTemporada().getPorcentajeTarifa()).toBe(1);
     })
 
     it('debería calcular correctamente el número de días totales de la reserva', () => {
