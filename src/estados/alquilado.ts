@@ -40,8 +40,5 @@ export default class Alquilado implements IEstado {
          }
          this.vehiculo.cambiarEstado(new Disponible(this.vehiculo));
       }
- 
-      public puedeSerAlquilado(){
-         return false;
-      }
+
 }

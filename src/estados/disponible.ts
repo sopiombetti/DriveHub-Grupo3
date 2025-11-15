@@ -15,11 +15,7 @@ export default class Disponible implements IEstado {
     }
 
     public ponerDisponible(){
-        throw new Error();
-    }
-
-    public puedeSerAlquilado(){
-        return true;
+        throw new Error("El vehiculo ya se encuentra disponible");
     }
 
 }

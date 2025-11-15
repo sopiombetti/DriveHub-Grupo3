@@ -3,5 +3,4 @@ export default interface IEstado {
     ponerEnMantenimiento():void;
     ponerDisponible(): void;
 
-    puedeSerAlquilado(): boolean;
 }
