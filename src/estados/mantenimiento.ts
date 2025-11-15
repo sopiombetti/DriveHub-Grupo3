@@ -18,9 +18,4 @@ export default class Mantenimiento implements IEstado {
         this.vehiculo.cambiarEstado(new Disponible(this.vehiculo));
     }
 
-
-    public puedeSerAlquilado(){
-        return false;
-    }
-
 }

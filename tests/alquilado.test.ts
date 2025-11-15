@@ -42,10 +42,6 @@ describe('Test Clase Alquilado',()=>{
         expect(() => estadoAlquilado.ponerEnMantenimiento()).toThrow("El vehiculo no puede ser enviado a mantenimiento");
     })
 
-    it('puedeSerAlquilado() debe retornar false', ()=> {
-        expect(estadoAlquilado.puedeSerAlquilado()).toBe(false);
-    })
-
     describe("necesitaMantenimiento()", () => {
     
         it("Debe retornar TRUE si tiene mas de 10,000 km", () => {
