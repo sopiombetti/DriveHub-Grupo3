@@ -3,11 +3,10 @@ import Vehiculo from "./vehiculo";
 export default class Sedan extends Vehiculo{
 
     /**
-     * crea un vehiculo de tipo Sedan
+     * crea un vehiculo de tipo Sedan.
      * @param {string} matricula -  
-     * @param {number} kilometraje - cantidad de km que marca el cuentakilometros 
-     * @param {number} tarifaBase - tarifa base por alquilar un Sedan. Igual para todas las instancias
-     * @param {number} valorCargoExtra - cargo extra por alquilar un Sedan. Igual para todas las instancias
+     * @param {number} kilometraje - kilometraje del vehiculo.
+     * Las tarifas y cargos extras se inicializan según lo correspondiente a Sedan.
      */
     constructor(matricula:string, kilometraje:number){
         super(matricula, kilometraje);
@@ -24,7 +23,6 @@ export default class Sedan extends Vehiculo{
 	 * @returns {boolean}
      */
     condicionCargosExtra(kmTotales: number, diasTotales: number): boolean {
-        /* Recibe parametros km y dias y no los utiliza... */
         return true;
     }
 }
