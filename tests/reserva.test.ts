@@ -17,12 +17,10 @@ class MockVehiculo extends Vehiculo {
 class MockCliente extends Cliente {
     constructor() {
         
-        super('12345678', 'Juan Perez', 'juan@example.com');
+        super('12345678', 'Juan Perez', 'juan@example.com', null as any);
     }
     
-    public devolverVehiculo(vehiculo: Vehiculo): number {
-        return 12000;
-    }
+
 }
 
 type TemporadaLike = Pick<

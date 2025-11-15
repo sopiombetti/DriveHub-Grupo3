@@ -278,7 +278,7 @@ describe('Tests clase Admin', () => {
         const FECHA_FIN = new Date('2025-11-10');
 
         beforeEach(() => {
-            mockCliente = new MockCliente('Cliente Test', '12345', '@mail');
+            mockCliente = new MockCliente('Cliente Test', '12345', '@mail', admin);
             mockVehiculo = new MockVehiculo('ABC-123', 0);
 
             mockSolicitud = new SolicitudReserva(mockCliente, mockVehiculo, FECHA_INICIO, FECHA_FIN);
@@ -396,21 +396,21 @@ describe('Tests clase Admin', () => {
    
     
     it('Agregar un cliente nuevo al array', () => {
-        const cliente = new MockCliente('Raul', '123', '@mail');
+        const cliente = new MockCliente('Raul', '123', '@mail', admin);
         admin.agregarCliente(cliente);
         expect(admin['clientes']).toContain(cliente);
     });
 
     it('Cliente ya existe en el array', () => {
-        const cliente1 = new MockCliente('Raul', '123', '@mail');
-        const cliente2 = new MockCliente('Raul', '123', '@mail');
+        const cliente1 = new MockCliente('Raul', '123', '@mail', admin);
+        const cliente2 = new MockCliente('Raul', '123', '@mail', admin);
 
         admin.agregarCliente(cliente1);
         expect(() => admin.agregarCliente(cliente2)).toThrow('El cliente ya se encuentra en el array');
     });
 
     it('Quitar un cliente del array', () => {
-        const cliente = new MockCliente('Raul', '123', '@mail');
+        const cliente = new MockCliente('Raul', '123', '@mail', admin);
         admin.agregarCliente(cliente);
         admin.quitarCliente(cliente);
         expect(admin['clientes']).not.toContain(cliente);
