@@ -21,7 +21,10 @@ export default class Cliente extends Persona{
     }
 
 
-    // En este momento el cliente le indica verbalmente al admin cual vehiculo quiere y en que fechas.
+    /** 
+     * Genera la solicitud de reserva y se la pasa a admin.
+     * @param {Vehiculo, Date, Date}
+     */
     public generarSolicitud(vehiculo:Vehiculo, fechaInicio:Date, fechaFin:Date) {
         const nuevaSolicitud = new SolicitudReserva(this,vehiculo, fechaInicio, fechaFin);
 

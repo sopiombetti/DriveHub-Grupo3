@@ -1,15 +1,11 @@
 import Vehiculo from "./vehiculo";
-/**
-Representa un vehiculo de tipo SUV con sus atributos particulares.
-*/
+
 export default class SUV extends Vehiculo{
     /**
      * crea un vehiculo de tipo SUV
      * @param {string} matricula -  
-     * @param {number} kilometraje - cantidad de km que marca el cuentakilometros 
-     * @param {number} tarifaBase - tarifa base por alquilar un SUV. Igual para todas las instancias
-     * @param {number} valorCargoExtra - cargo extra por alquilar un SUV. Igual para todas las instancias
-     * @param {number} tarifaBase - cargo extra por concepto de seguro. Igual para todas las instancias
+     * @param {number} kilometraje - kilometraje del vehiculo
+     * Las tarifas y cargos extras se inicializan según lo correspondiente a SUV.
      */
     constructor(matricula:string, kilometraje:number){
         super(matricula, kilometraje);
@@ -26,7 +22,6 @@ export default class SUV extends Vehiculo{
 	 * @returns {boolean}
      */
     condicionCargosExtra(kmTotales: number, diasTotales: number): boolean{
-        /* Recibe parametro dias pero no lo uiliza... */ 
         return (kmTotales>500);
     }
 
