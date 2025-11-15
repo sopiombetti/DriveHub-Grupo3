@@ -50,4 +50,44 @@ describe('Tests de Cliente', () => {
         expect(solicitudPasada.getFechaInicio()).toBe(FECHA_INICIO);
         expect(solicitudPasada.getFechaFin()).toBe(FECHA_FIN);
     });
+
+    describe('test de metodos de la clase abstracta Persona' , () => {
+        it('debe poder obtenerse el nombre' , () =>{
+            let resultado : string = cliente.getNombre();
+
+            expect(resultado).toBe("Ana");
+        })
+        it('debe poder obtenerse el dni' , () =>{
+            let resultado : string = cliente.getDni();
+
+            expect(resultado).toBe("123");
+        })
+        it('debe poder obtenerse el email' , () =>{
+            let resultado : string = cliente.getEmail();
+
+            expect(resultado).toBe('@mail');
+        })
+
+        it('debe poder setearse el nombre' , () =>{
+            
+            cliente.setNombre('Marta');
+
+            expect(cliente.getNombre()).toBe("Marta");
+        })
+    
+        it('debe poder setearse el dni' , () =>{
+            
+            cliente.setDni('4223');
+
+            expect(cliente.getDni()).toBe("4223");
+        })
+    
+        it('debe poder setearse el email' , () =>{
+            
+            cliente.setEmail('@mail.com');
+
+            expect(cliente.getEmail()).toBe("@mail.com");
+        })
+    
+    })
 });
