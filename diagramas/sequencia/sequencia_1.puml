@@ -1,0 +1,58 @@
+@startuml name sequencia1
+
+title Diagrama de Secuencia - Generar una Reserva
+
+
+actor Usuario as "Usuario (Cliente)"
+participant Admin as "admin:Admin"
+participant Solicitud as "solicitud:SolicitudReserva"
+participant Vehiculo as "vehiculo:Vehiculo"
+participant Reserva as "nuevaReserva:Reserva"
+
+
+Usuario -> Admin: generarReserva(solicitud)
+activate Admin
+
+Admin -> Solicitud: getVehiculo()
+activate Solicitud
+Solicitud --> Admin: vehiculo
+deactivate Solicitud
+
+Admin -> Solicitud: getFechaInicio()
+activate Solicitud
+Solicitud --> Admin: fechaInicio
+deactivate Solicitud
+
+Admin -> Solicitud: getFechaFin()
+activate Solicitud
+Solicitud --> Admin: fechaFin
+deactivate Solicitud
+
+
+Admin -> Admin: chequearDisponibilidad(vehiculo, fechaInicio, fechaFin)
+activate Admin
+Admin -> Vehiculo: puedeSerAlquilado(fechaInicio, fechaFin)
+activate Vehiculo
+Vehiculo --> Admin: (true)
+deactivate Vehiculo
+
+Admin --> Admin: (true)
+deactivate Admin
+
+' Si está disponible, se crea la reserva
+create participant Reserva
+Admin -> Reserva: new Reserva(cliente, vehiculo, fechaInicio, fechaFin)
+activate Reserva
+Reserva --> Admin: nuevaReserva
+deactivate Reserva
+
+Admin -> Admin: this.reservas.push(nuevaReserva)
+
+Admin -> Vehiculo: agregarReserva(nuevaReserva)
+activate Vehiculo
+Vehiculo -> Vehiculo: this.reservasConfirmadas.push(nuevaReserva)
+deactivate Vehiculo
+
+Admin --> Usuario: (Reserva Generada)
+deactivate Admin
+@enduml
