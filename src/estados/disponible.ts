@@ -1,9 +1,9 @@
-import Vehiculo from "../vehiculos/vehiculo";
-import Alquilado from "./alquilado";
-import IEstado from "./estado";
-import Mantenimiento from "./mantenimiento";
+import {Vehiculo} from "../vehiculos/vehiculo";
+import {Alquilado} from "./alquilado";
+import {IEstado} from "./estado";
+import {Mantenimiento} from "./mantenimiento";
 
-export default class Disponible implements IEstado {
+export class Disponible implements IEstado {
     
     constructor(private vehiculo : Vehiculo){}
 

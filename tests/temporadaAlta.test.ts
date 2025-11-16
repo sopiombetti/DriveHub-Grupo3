@@ -1,4 +1,4 @@
-import TemporadaAlta from "../src/temporadas/temporadaAlta";
+import {TemporadaAlta} from "../src/temporadas/temporadaAlta";
 
 describe('Test de la clase temporadaMedia', ()=> {
     let tempAlta : TemporadaAlta;

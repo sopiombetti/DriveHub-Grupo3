@@ -1,13 +1,13 @@
-import Persona from "./persona";
-import Vehiculo from "./vehiculos/vehiculo";
-import SolicitudReserva from "./solicitudReserva";
-import Admin from "./admin";
+import {Persona} from "./persona";
+import {Vehiculo} from "./vehiculos/vehiculo";
+import {SolicitudReserva} from "./solicitudReserva";
+import {Admin} from "./admin";
 
 /**
  * Clase que representa un cliente del sistema de alquiler de vehículos.
  * @extends Persona 
  */
-export default class Cliente extends Persona{
+export class Cliente extends Persona{
 
 
     /**

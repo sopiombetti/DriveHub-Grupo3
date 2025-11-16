@@ -1,7 +1,7 @@
-import Cliente from "./cliente";
-import Vehiculo from "./vehiculos/vehiculo";
+import {Cliente} from "./cliente";
+import {Vehiculo} from "./vehiculos/vehiculo";
 
-export default class SolicitudReserva {
+export class SolicitudReserva {
 
     constructor( private cliente:Cliente ,private vehiculo: Vehiculo,private fechaInicio: Date,private fechaFin: Date) {
     }

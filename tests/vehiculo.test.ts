@@ -1,8 +1,8 @@
 import moment from "moment";
-import Reserva from "../src/reserva";
-import Vehiculo from "../src/vehiculos/vehiculo";
-import IEstado from "../src/estados/estado";
-import Disponible from "../src/estados/disponible";
+import {Reserva} from "../src/reserva";
+import {Vehiculo} from "../src/vehiculos/vehiculo";
+import {IEstado} from "../src/estados/estado";
+import {Disponible} from "../src/estados/disponible";
 
 // Subclase concreta para poder instanciar Vehiculo
 class VehiculoMock extends Vehiculo {

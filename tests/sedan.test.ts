@@ -1,4 +1,4 @@
-import Sedan from "../src/vehiculos/sedan";
+import {Sedan} from "../src/vehiculos/sedan";
 
 describe('Tests clase Sedan', () => {
     let sedan: Sedan;

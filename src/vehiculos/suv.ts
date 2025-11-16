@@ -1,6 +1,6 @@
-import Vehiculo from "./vehiculo";
+import {Vehiculo} from "./vehiculo";
 
-export default class SUV extends Vehiculo{
+export class SUV extends Vehiculo{
     /**
      * crea un vehiculo de tipo SUV
      * @param {string} matricula -  

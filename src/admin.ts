@@ -1,14 +1,14 @@
-import Vehiculo from "./vehiculos/vehiculo";
-import Reserva from "./reserva";
-import Cliente from "./cliente";
-import SolicitudReserva from "./solicitudReserva";
+import {Vehiculo} from "./vehiculos/vehiculo";
+import {Reserva} from "./reserva";
+import {Cliente} from "./cliente";
+import {SolicitudReserva} from "./solicitudReserva";
 import moment, { max, min } from "moment";
 
 /**
 Administra clientes, vehículos y reservas.  
 Permite verificar disponibilidad y gestionar las listas.
 */
-export default class Admin {
+export class Admin {
 
     private clientes: Array<Cliente>;
     private reservas: Array<Reserva>;

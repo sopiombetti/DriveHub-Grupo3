@@ -1,10 +1,10 @@
 import { AlquilarException } from "../excepciones/alquilarException";
 import { MantenimientoException } from "../excepciones/mantenimientoException";
-import Vehiculo from "../vehiculos/vehiculo";
-import Disponible from "./disponible";
-import IEstado from "./estado";
+import {Vehiculo} from "../vehiculos/vehiculo";
+import {Disponible} from "./disponible";
+import {IEstado} from "./estado";
 
-export default class Mantenimiento implements IEstado {  
+export class Mantenimiento implements IEstado {  
     constructor(private vehiculo : Vehiculo){}
 
     /**

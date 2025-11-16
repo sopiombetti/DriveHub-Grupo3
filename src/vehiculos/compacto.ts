@@ -1,6 +1,6 @@
-import Vehiculo from "./vehiculo";
+import {Vehiculo} from "./vehiculo";
 
-export default class Compacto extends Vehiculo{
+export class Compacto extends Vehiculo{
 
     /**
      * constructor para instanciar objetos de Compacto.

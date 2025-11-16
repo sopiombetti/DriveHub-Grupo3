@@ -1,6 +1,6 @@
-import Vehiculo from "./vehiculo";
+import {Vehiculo} from "./vehiculo";
 
-export default class Sedan extends Vehiculo{
+export class Sedan extends Vehiculo{
 
     /**
      * crea un vehiculo de tipo Sedan.

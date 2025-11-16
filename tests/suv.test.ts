@@ -1,5 +1,5 @@
-import SUV from "../src/vehiculos/suv";
-import Vehiculo from "../src/vehiculos/vehiculo";
+import {SUV} from "../src/vehiculos/suv";
+import {Vehiculo} from "../src/vehiculos/vehiculo";
 
 describe('Test Clase SUV', () => {
     

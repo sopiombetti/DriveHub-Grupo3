@@ -1,8 +1,8 @@
-import Admin from '../src/admin';
-import Cliente from '../src/cliente';
-import Vehiculo from '../src/vehiculos/vehiculo';
-import SolicitudReserva from '../src/solicitudReserva';
-import Reserva from '../src/reserva';
+import {Admin} from '../src/admin';
+import {Cliente} from '../src/cliente';
+import {Vehiculo} from '../src/vehiculos/vehiculo';
+import {SolicitudReserva} from '../src/solicitudReserva';
+import {Reserva} from '../src/reserva';
 
 
 class MockVehiculo extends Vehiculo{

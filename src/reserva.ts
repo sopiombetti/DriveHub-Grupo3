@@ -1,8 +1,8 @@
-import CalculadoraTarifa from "./calculadoraTarifa";
-import Cliente from "./cliente";
-import Temporada from "./temporadas/temporada";
-import TemporadaMedia from "./temporadas/temporadaMedia";
-import Vehiculo from "./vehiculos/vehiculo";
+import {CalculadoraTarifa} from "./calculadoraTarifa";
+import {Cliente} from "./cliente";
+import {Temporada} from "./temporadas/temporada";
+import {TemporadaMedia} from "./temporadas/temporadaMedia";
+import {Vehiculo} from "./vehiculos/vehiculo";
 import moment from "moment";
 
 
@@ -10,7 +10,7 @@ import moment from "moment";
 * Representa la asignación de un vehículo a un cliente por un período de tiempo.
 * Administra las fechas, el vehículo y el cálculo de días y kilometros.
 */
-export default class Reserva{
+export class Reserva{
     
     private cliente: Cliente;
     private vehiculo: Vehiculo;
