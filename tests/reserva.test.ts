@@ -1,7 +1,7 @@
-import Reserva from '../src/reserva';
-import Cliente from '../src/cliente'; 
-import Vehiculo from '../src/vehiculos/vehiculo';
-import Temporada from '../src/temporadas/temporada';
+import {Reserva} from '../src/reserva';
+import {Cliente} from '../src/cliente'; 
+import {Vehiculo} from '../src/vehiculos/vehiculo';
+import {Temporada} from '../src/temporadas/temporada';
 
 class MockVehiculo extends Vehiculo {
     constructor() {

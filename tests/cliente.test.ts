@@ -1,7 +1,7 @@
-import Cliente from '../src/cliente';
-import Vehiculo from '../src/vehiculos/vehiculo';
-import SolicitudReserva from '../src/solicitudReserva';
-import Admin from '../src/admin'; 
+import {Cliente} from '../src/cliente';
+import {Vehiculo} from '../src/vehiculos/vehiculo';
+import {SolicitudReserva} from '../src/solicitudReserva';
+import {Admin} from '../src/admin'; 
 
 
 jest.mock('../src/admin'); 

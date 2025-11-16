@@ -1,8 +1,8 @@
-import Reserva from "./reserva";
+import {Reserva} from "./reserva";
 /**
 Clase que calcula la tarifa que el cliente paga por la reserva.  
 */
-export default class CalculadoraTarifa {
+export class CalculadoraTarifa {
 
 	/**
      * método que calcula la tarifa final de una reserva en base a los kilometros recorridos, los dias, los cargos del tipo de vehiculo y la temporada.

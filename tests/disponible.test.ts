@@ -1,7 +1,7 @@
-import Alquilado from "../src/estados/alquilado";
-import Disponible from "../src/estados/disponible"
-import Mantenimiento from "../src/estados/mantenimiento";
-import Vehiculo from "../src/vehiculos/vehiculo";
+import {Alquilado} from "../src/estados/alquilado";
+import {Disponible} from "../src/estados/disponible"
+import {Mantenimiento} from "../src/estados/mantenimiento";
+import {Vehiculo} from "../src/vehiculos/vehiculo";
 
 describe("Clase Disponible", () => {
   

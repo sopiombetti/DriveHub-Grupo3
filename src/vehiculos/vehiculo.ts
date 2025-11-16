@@ -1,13 +1,13 @@
 import moment from "moment";
-import Disponible from "../estados/disponible";
-import IEstado from "../estados/estado";
-import Reserva from "../reserva";
+import {Disponible} from "../estados/disponible";
+import {IEstado} from "../estados/estado";
+import {Reserva} from "../reserva";
 
 /**
  * Clase abstracta de un vehiculo
  * @abstract
  */
-export default abstract class Vehiculo {
+export abstract class Vehiculo {
 
     protected matricula : string;
     protected estado : IEstado;

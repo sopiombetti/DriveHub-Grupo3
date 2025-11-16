@@ -1,10 +1,10 @@
 import moment from "moment";
-import Alquilado from "../src/estados/alquilado";
+import {Alquilado} from "../src/estados/alquilado";
 import { AlquilarException } from "../src/excepciones/alquilarException";
 import { MantenimientoException } from "../src/excepciones/mantenimientoException";
-import Vehiculo from "../src/vehiculos/vehiculo";
-import Disponible from "../src/estados/disponible";
-import Mantenimiento from "../src/estados/mantenimiento";
+import {Vehiculo} from "../src/vehiculos/vehiculo";
+import {Disponible} from "../src/estados/disponible";
+import {Mantenimiento} from "../src/estados/mantenimiento";
 
 describe('Test Clase Alquilado',()=>{
     let vehiculoMock: jest.Mocked<Vehiculo>;

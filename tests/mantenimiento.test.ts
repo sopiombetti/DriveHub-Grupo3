@@ -1,8 +1,8 @@
-import Disponible from "../src/estados/disponible";
-import Mantenimiento from "../src/estados/mantenimiento";
+import {Disponible} from "../src/estados/disponible";
+import {Mantenimiento} from "../src/estados/mantenimiento";
 import { AlquilarException } from "../src/excepciones/alquilarException";
 import { MantenimientoException } from "../src/excepciones/mantenimientoException";
-import Vehiculo from "../src/vehiculos/vehiculo";
+import {Vehiculo} from "../src/vehiculos/vehiculo";
 
 describe('Test Clase Mantenimiento',()=>{
 

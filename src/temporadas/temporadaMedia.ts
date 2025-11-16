@@ -1,6 +1,6 @@
-import Temporada from "./temporada";
+import {Temporada} from "./temporada";
 
-export default class TemporadaMedia implements Temporada{
+export class TemporadaMedia implements Temporada{
     
     /**
     * Devuelve el porcentaje que varía la tarifa según la temporada.
