@@ -1,4 +1,4 @@
-export default abstract class Persona{
+export abstract class Persona{
 
     protected nombre: string;
     protected dni: string;

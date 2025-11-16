@@ -1,26 +1,19 @@
-import Mantenimiento from "../src/estados/mantenimiento";
+import {Disponible} from "../src/estados/disponible";
+import {Mantenimiento} from "../src/estados/mantenimiento";
 import { AlquilarException } from "../src/excepciones/alquilarException";
 import { MantenimientoException } from "../src/excepciones/mantenimientoException";
-import Vehiculo from "../src/vehiculos/vehiculo";
+import {Vehiculo} from "../src/vehiculos/vehiculo";
 
 describe('Test Clase Mantenimiento',()=>{
 
-    class MockVehiculo extends Vehiculo {
-        constructor() {
-            super('ABC123', 10000); 
-        }
-
-        public condicionCargosExtra(kmTotales: number, diasTotales: number): boolean {
-            return false; 
-        }
-    }
-
     let mantenimiento: Mantenimiento;
-    let vehiculo: MockVehiculo;
+    let vehiculoMock: jest.Mocked<Vehiculo>;
     
     beforeEach(() => {
-      vehiculo = new MockVehiculo();
-      mantenimiento = new Mantenimiento(vehiculo);
+      vehiculoMock = {
+        cambiarEstado: jest.fn()
+      } as unknown as jest.Mocked<Vehiculo>;
+      mantenimiento = new Mantenimiento(vehiculoMock);
     });
 
     it('debe ser una instancia de Mantenimiento',()=>{
@@ -35,6 +28,11 @@ describe('Test Clase Mantenimiento',()=>{
     it('debe lanzar excepcion mantenimiento', () => {
       expect(() => mantenimiento.ponerEnMantenimiento()).toThrow(MantenimientoException);
       expect(() => mantenimiento.ponerEnMantenimiento()).toThrow("El vehiculo no puede ser enviado a mantenimiento");
+    })
+
+    it('debe cambiar de estado a disponible', () => {
+      mantenimiento.ponerDisponible();
+      expect(vehiculoMock.cambiarEstado).toHaveBeenCalledWith(expect.any(Disponible));
     })
 
 })

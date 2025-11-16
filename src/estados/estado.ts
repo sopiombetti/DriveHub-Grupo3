@@ -1,7 +1,6 @@
-export default interface IEstado {
+export interface IEstado {
     alquilar(): void;
     ponerEnMantenimiento():void;
     ponerDisponible(): void;
 
-    puedeSerAlquilado(): boolean;
 }

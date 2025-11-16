@@ -1,7 +1,7 @@
-import CalculadoraTarifa from "../src/calculadoraTarifa";
-import Reserva from "../src/reserva";
-import Temporada from "../src/temporadas/temporada";
-import Vehiculo from "../src/vehiculos/vehiculo";
+import {CalculadoraTarifa} from "../src/calculadoraTarifa";
+import {Reserva} from "../src/reserva";
+import {Temporada} from "../src/temporadas/temporada";
+import {Vehiculo} from "../src/vehiculos/vehiculo";
 import moment from "moment";
 
 type VehiculoLike = Pick<

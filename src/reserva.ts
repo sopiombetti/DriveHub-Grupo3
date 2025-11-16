@@ -1,8 +1,8 @@
-import CalculadoraTarifa from "./calculadoraTarifa";
-import Cliente from "./cliente";
-import Temporada from "./temporadas/temporada";
-import TemporadaMedia from "./temporadas/temporadaMedia";
-import Vehiculo from "./vehiculos/vehiculo";
+import {CalculadoraTarifa} from "./calculadoraTarifa";
+import {Cliente} from "./cliente";
+import {Temporada} from "./temporadas/temporada";
+import {TemporadaMedia} from "./temporadas/temporadaMedia";
+import {Vehiculo} from "./vehiculos/vehiculo";
 import moment from "moment";
 
 
@@ -10,7 +10,7 @@ import moment from "moment";
 * Representa la asignación de un vehículo a un cliente por un período de tiempo.
 * Administra las fechas, el vehículo y el cálculo de días y kilometros.
 */
-export default class Reserva{
+export class Reserva{
     
     private cliente: Cliente;
     private vehiculo: Vehiculo;
@@ -36,103 +36,101 @@ export default class Reserva{
     }
     
     /** 
-    * Devuelve el vehículo reservado.
-    * 
-    * @returns {Vehiculo} Vehiculo
-    */
+     * Devuelve el vehículo reservado.
+     * @returns {Vehiculo} Vehiculo
+     */
     public getVehiculo(): Vehiculo{
         return this.vehiculo;
     }
 
     /** 
-    * Devuelve el cliente que realizó la reserva.
-    * 
-    * @returns {Cliente} Cliente
-    */
+     * Devuelve el cliente que realizó la reserva.
+     * @returns {Cliente} Cliente
+     */
     public getCliente(): Cliente{
         return this.cliente;
     }
 
     /**
-    * Devuelve la fecha de inicio de la reserva.
-    * 
-    * @returns {Date}
-    */
+     * Devuelve la fecha de inicio de la reserva.
+     * @returns {Date}
+     */
     public getFechaInicio(): Date{
         return this.fechaInicio;
     }
 
     /**
-    * Devuelve la fecha de finalizacion de la reserva.
-    * 
-    * @returns {Date} 
-    */
+     * Devuelve la fecha de finalizacion de la reserva.
+     * @returns {Date} 
+     */
     public getFechaFin(): Date{
         return this.fechaFin;
     }
+
     /**
-    * Devuelve la fecha de inicio de la reserva formateada a string.
-    * 
-    * @returns {String} 
-    */
+     * Devuelve la fecha de inicio de la reserva formateada a string.
+     * @returns {String} 
+     */
     public getFechaInicioFormateada(): string {
         return moment(this.fechaInicio).format("DD/MM/YYYY");
     }
+
     /**
-    * Devuelve la fecha de finalizacion de la reserva formateada a string.
-    * 
-    * @returns {String} 
-    */
+     * Devuelve la fecha de finalizacion de la reserva formateada a string.
+     * @returns {String} 
+     */
     public getFechaFinFormateada(): string {
         return moment(this.fechaFin).format("DD/MM/YYYY");
     }
 
 
     /**
-    * Devuelve la temporada.
-    * 
-    * @returns {Temporada}
-    */
+     * Devuelve la temporada.
+     * @returns {Temporada}
+     */
     public getTemporada(): Temporada{
         return this.temporada;
     }
 
 
     /**
-    * Setea la temporada.
-    * 
-    */
+     * Setea la temporada.
+     */
     public setTemporada(temporada: Temporada): void{
         this.temporada = temporada;
     }
 
-    
+    /**
+     * Termina la reserva y pasa el vehículo a disponible.
+     */
     public terminarReserva(): void{
         this.vehiculo.ponerDisponible();
         this.vehiculo.actualizarKilometraje(this.calcularKmRecorridos());
         this.vehiculo.actualizarKmDesdeUltMant(this.calcularKmRecorridos());
     }
 
+    /**
+     * Devuelve la tarifa total que obtiene la calculadora.
+     * @returns {number}
+     */
     public calcularTarifaReserva(): number{
         const calculadora: CalculadoraTarifa = new CalculadoraTarifa();
         return calculadora.calcularTarifa(this);
     }
     
-    
     /**
-    * Devuelve los kilómetros recorridos durante la reserva.
-    * @returns {number}
-    */
+     * Devuelve los kilómetros recorridos durante la reserva.
+     * @returns {number}
+     */
     public calcularKmRecorridos(): number{
         let kmRecorridos = Math.floor((Math.random() * 651) + 50);
         return kmRecorridos;
     }
 
     /**
-    * Calcula el número total de días de la reserva.
-    * 
-    * @returns {number} 
-    */
+     * Calcula el número total de días de la reserva.
+     * @returns {number} 
+     */
     public calcularDiasTotales(): number {
         const inicio = moment(this.fechaInicio);
         const fin = moment(this.fechaFin);

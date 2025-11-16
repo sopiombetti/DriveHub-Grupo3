@@ -1,3 +1,3 @@
-export default interface Temporada{
+export interface Temporada{
     getPorcentajeTarifa(): number;
 }

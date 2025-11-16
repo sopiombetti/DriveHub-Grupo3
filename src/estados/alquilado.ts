@@ -1,23 +1,35 @@
 import { AlquilarException } from "../excepciones/alquilarException";
 import { MantenimientoException } from "../excepciones/mantenimientoException";
-import Vehiculo from "../vehiculos/vehiculo";
-import Disponible from "./disponible";
-import IEstado from "./estado";
-import Mantenimiento from "./mantenimiento";
+import {Vehiculo} from "../vehiculos/vehiculo";
+import {Disponible} from "./disponible";
+import {IEstado} from "./estado";
+import {Mantenimiento} from "./mantenimiento";
 import moment from "moment";
 
-export default class Alquilado implements IEstado {
+export class Alquilado implements IEstado {
   
       constructor(private vehiculo : Vehiculo){}
  
+      /**
+      * Lanza una excepción al no poder ser alquilado.
+      * @throws {AlquilarException}
+      */
       public alquilar() {
          throw new AlquilarException("El vehiculo no se puede alquilar");
       }  
 
+      /**
+      * Lanza una excepción al no poder ir a mantenimiento.
+      * @throws {MantenimientoException}
+      */
       public ponerEnMantenimiento(){
          throw new MantenimientoException("El vehiculo no puede ser enviado a mantenimiento");
       }
 
+      /**
+      * Analiza si el vehiculo necesita mantenimiento en base a los requerimientos.
+      * @returns {boolean}
+      */
       public necesitaMantenimiento(): boolean{
          const hoy = moment();
          const fin = moment(this.vehiculo.getFechaUltimoMant());
@@ -30,6 +42,9 @@ export default class Alquilado implements IEstado {
          return false;
       }
  
+      /**
+      * Si el vehiculo necesita mantenimiento, cambia de estado a Mantenimiento. Sino, cambia a Disponible.
+      */
       public ponerDisponible(){
          if(this.necesitaMantenimiento()){
             this.vehiculo.cambiarEstado(new Mantenimiento(this.vehiculo));
@@ -40,8 +55,5 @@ export default class Alquilado implements IEstado {
          }
          this.vehiculo.cambiarEstado(new Disponible(this.vehiculo));
       }
- 
-      public puedeSerAlquilado(){
-         return false;
-      }
+
 }

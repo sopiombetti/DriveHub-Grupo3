@@ -1,8 +1,8 @@
-import Admin from '../src/admin';
-import Cliente from '../src/cliente';
-import Vehiculo from '../src/vehiculos/vehiculo';
-import SolicitudReserva from '../src/solicitudReserva';
-import Reserva from '../src/reserva';
+import {Admin} from '../src/admin';
+import {Cliente} from '../src/cliente';
+import {Vehiculo} from '../src/vehiculos/vehiculo';
+import {SolicitudReserva} from '../src/solicitudReserva';
+import {Reserva} from '../src/reserva';
 
 
 class MockVehiculo extends Vehiculo{
@@ -27,7 +27,7 @@ describe('Tests clase Admin', () => {
     let mockVehiculo1: MockVehiculo;
     let mockVehiculo2: MockVehiculo;
     let mockVehiculo3: MockVehiculo;
-
+    let reservaMockCuatro : Reserva;
     beforeEach(() => {
         admin = new Admin();
         
@@ -38,22 +38,32 @@ describe('Tests clase Admin', () => {
         reservaMock ={ 
             getFechaInicio: jest.fn().mockReturnValue('2025-10-20T00:00:00Z'),
             getFechaFin: jest.fn().mockReturnValue('2025-10-25T00:00:00Z'),
-            getVehiculo: jest.fn().mockReturnValue(mockVehiculo1)
+            getVehiculo: jest.fn().mockReturnValue(mockVehiculo1),
+            calcularTarifaReserva: jest.fn().mockReturnValue(100)
         }as unknown as Reserva;
 
         reservaMockDos = { 
             getFechaInicio: jest.fn().mockReturnValue('2025-10-07T00:00:00Z'),
             getFechaFin: jest.fn().mockReturnValue('2025-10-28T00:00:00Z'),
-            getVehiculo: jest.fn().mockReturnValue(mockVehiculo2)
+            getVehiculo: jest.fn().mockReturnValue(mockVehiculo2),
+            calcularTarifaReserva: jest.fn().mockReturnValue(200)
 
         }as unknown as Reserva;
 
         reservaMockTres = {    
             getFechaInicio: jest.fn().mockReturnValue('2025-10-08T00:00:00Z'),
             getFechaFin: jest.fn().mockReturnValue('2025-10-18T00:00:00Z'),
-            getVehiculo: jest.fn().mockReturnValue(mockVehiculo3)
+            getVehiculo: jest.fn().mockReturnValue(mockVehiculo3),
+              calcularTarifaReserva: jest.fn().mockReturnValue(300)
 
         }as unknown as Reserva;
+
+        reservaMockCuatro = {
+            getFechaInicio: jest.fn().mockReturnValue('2025-10-30T00:00:00Z'),
+            getFechaFin: jest.fn().mockReturnValue('2025-11-02T00:00:00Z'),
+            getVehiculo: jest.fn().mockReturnValue(mockVehiculo1),
+            calcularTarifaReserva: jest.fn().mockReturnValue(400)
+        } as unknown as Reserva;
 
     });
 
@@ -165,6 +175,70 @@ describe('Tests clase Admin', () => {
         });
     });
 
+    describe('obtenerCostosMantenimiento', () => {
+        it('debe calcular los costos de mantenimiento de cada vehiculo',()=>{
+        admin['vehiculos'] = [mockVehiculo1, mockVehiculo2, mockVehiculo3];
+
+        jest.spyOn(Math, 'random').mockReturnValue(0.5);
+
+        jest.spyOn(mockVehiculo1, 'getCantMantenimiento').mockReturnValue(1);
+        jest.spyOn(mockVehiculo2, 'getCantMantenimiento').mockReturnValue(2);
+        jest.spyOn(mockVehiculo3, 'getCantMantenimiento').mockReturnValue(5);
+
+        const resultado = admin.obtenerCostosMantenimiento();
+
+        expect(resultado.has(mockVehiculo1)).toBe(true);
+        expect(resultado.has(mockVehiculo2)).toBe(true);
+        expect(resultado.has(mockVehiculo3)).toBe(true);
+        expect(resultado.size).toBe(3);
+        expect(resultado.get(mockVehiculo1)).toBe(1 * 100);
+        expect(resultado.get(mockVehiculo2)).toBe(2 * 100);
+        expect(resultado.get(mockVehiculo3)).toBe(5 * 100);
+    
+        })
+
+    })
+    describe('obtenerGananciasAlquileres',() =>{
+        it('debe sumar las ganancias de los alquileres completados por cada vehiculo', () => {
+ 
+        admin['reservas'] = [reservaMock,reservaMockDos,reservaMockTres,reservaMockCuatro];
+
+        const resultado = admin.obtenerGananciasAlquileres();
+        
+        expect(resultado.has(mockVehiculo1)).toBe(true);
+        expect(resultado.has(mockVehiculo2)).toBe(true);
+        expect(resultado.has(mockVehiculo3)).toBe(true);
+        expect(resultado.size).toBe(3);
+        expect(resultado.get(mockVehiculo1)).toBe(100+400);
+        expect(resultado.get(mockVehiculo2)).toBe(200);
+        expect(resultado.get(mockVehiculo3)).toBe(300);
+    });
+    })
+
+    describe('obtenerRentabilidad',() =>{
+        it('debe devolver un string con el vehiculo mas y menos rentable', () =>{
+            const costos = new Map<Vehiculo, number>();
+            const ganancias = new Map<Vehiculo, number>();
+
+            // Configuramos matrículas mock
+            jest.spyOn(mockVehiculo1, 'getMatricula').mockReturnValue('AUTO-UNO');
+            jest.spyOn(mockVehiculo2, 'getMatricula').mockReturnValue('AUTO-DOS');
+            jest.spyOn(mockVehiculo3, 'getMatricula').mockReturnValue('AUTO-TRES');
+
+            costos.set(mockVehiculo1, 100);
+            costos.set(mockVehiculo2, 150);
+            costos.set(mockVehiculo3, 600);
+
+            ganancias.set(mockVehiculo1, 800);
+            ganancias.set(mockVehiculo2, 200);
+            ganancias.set(mockVehiculo3, 500);
+
+            const resultado = admin.obtenerRentabilidad(costos, ganancias);
+
+            expect(resultado).toContain('Vehiculo más rentable: AUTO-UNO');
+            expect(resultado).toContain('Vehiculo menos rentable: AUTO-TRES');
+        })
+    })
     describe('obtenerAutoMenosAlquilado', () => {
         it('debe devolver el vehiculo menos veces alquilado', () => {
             const autosAlquilados = new Map<Vehiculo, number>([
@@ -278,7 +352,7 @@ describe('Tests clase Admin', () => {
         const FECHA_FIN = new Date('2025-11-10');
 
         beforeEach(() => {
-            mockCliente = new MockCliente('Cliente Test', '12345', '@mail');
+            mockCliente = new MockCliente('Cliente Test', '12345', '@mail', admin);
             mockVehiculo = new MockVehiculo('ABC-123', 0);
 
             mockSolicitud = new SolicitudReserva(mockCliente, mockVehiculo, FECHA_INICIO, FECHA_FIN);
@@ -394,23 +468,68 @@ describe('Tests clase Admin', () => {
         });
     });
    
-    
-    it('Agregar un cliente nuevo al array', () => {
-        const cliente = new MockCliente('Raul', '123', '@mail');
-        admin.agregarCliente(cliente);
-        expect(admin['clientes']).toContain(cliente);
-    });
+    describe('agregarCliente', () => {
+        it('Agregar un cliente nuevo al array', () => {
+            const cliente = new MockCliente('Raul', '123', '@mail', admin);
+            admin.agregarCliente(cliente);
+            expect(admin['clientes']).toContain(cliente);
+        });
+        it('si no se pasa por parametro un cliente, debe lanzar una excepcion', () => {
+            admin['clientes'] = []
+
+            expect(() => admin.agregarCliente(null as any)).toThrow('Cliente nulo o no existente');
+            expect(admin['clientes']).toHaveLength(0);
+        });
+
+        it('si se intenta agregar un cliente que ya existe, debe lanzar una excepcion', () => {
+            const cliente = new MockCliente('Raul', '123', '@mail', admin);
+            admin['clientes'] = [cliente]
+
+            
+            expect(() => admin.agregarCliente(cliente)).toThrow('El cliente ya se encuentra en el array');
+            expect(admin['clientes']).toHaveLength(1);
+            expect(admin['clientes']).toContain(cliente);
+        });
+
+        });
+           describe('getVehiculos', () => {
+        it('debe retornar una lista con los vehiculos', () => {
+            admin['vehiculos'] = [mockVehiculo1,mockVehiculo2];
+            const resultado = admin.getVehiculos();
+            
+            expect(resultado).toContain(mockVehiculo1);
+            expect(resultado).toContain(mockVehiculo2);
+            expect(resultado).toHaveLength(2);
+            expect(resultado[1]).toBe(mockVehiculo2);
+        })
+    })
+    describe('getClientes', () => {
+        
+        it('debe retornar una lista de clientes' , () => {
+            const clienteUno = new MockCliente('Raul', '123', '@mail', admin);
+            const clienteDos = new MockCliente('Saul', '456', 'a@mail', admin);
+            const clienteTres = new MockCliente('Saur', '789', 'p@mail', admin);
+            admin ['clientes'] = [clienteDos,clienteUno,clienteTres];
+            const resultado = admin.getClientes();
+            
+            expect(resultado).toContain(clienteDos);
+            expect(resultado).toContain(clienteUno);
+            expect(resultado).toContain(clienteTres);
+            expect(resultado).toHaveLength(3);
+            expect(resultado[0]).toBe(clienteDos);
+        })
+    })
 
     it('Cliente ya existe en el array', () => {
-        const cliente1 = new MockCliente('Raul', '123', '@mail');
-        const cliente2 = new MockCliente('Raul', '123', '@mail');
+        const cliente1 = new MockCliente('Raul', '123', '@mail', admin);
+        const cliente2 = new MockCliente('Raul', '123', '@mail', admin);
 
         admin.agregarCliente(cliente1);
         expect(() => admin.agregarCliente(cliente2)).toThrow('El cliente ya se encuentra en el array');
     });
 
     it('Quitar un cliente del array', () => {
-        const cliente = new MockCliente('Raul', '123', '@mail');
+        const cliente = new MockCliente('Raul', '123', '@mail', admin);
         admin.agregarCliente(cliente);
         admin.quitarCliente(cliente);
         expect(admin['clientes']).not.toContain(cliente);
@@ -429,10 +548,20 @@ describe('Tests clase Admin', () => {
         expect(() => admin.agregarVehiculo(vehiculo2)).toThrow('El vehiculo ya se encuentra en el array');
     });
 
+    it('Vehiculo ya existe en el array', () => {
+        admin['vehiculos'] = [mockVehiculo1,mockVehiculo2];
+
+        expect(() => admin.agregarVehiculo(null as any)).toThrow('Vehiculo nulo o no existente');
+        expect(admin['vehiculos']).toHaveLength(2);
+    });
+
     it('Quitar un vehiculo del array', () => {
         const vehiculo = new MockVehiculo("000", 10);
         admin.agregarVehiculo(vehiculo);
         admin.quitarVehiculo(vehiculo);
         expect(admin['vehiculos']).not.toContain(vehiculo);
     });
-});
+})
+
+
+ 

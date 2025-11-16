@@ -1,4 +1,4 @@
-import Compacto from "../src/vehiculos/compacto";
+import {Compacto} from "../src/vehiculos/compacto";
 
 describe("Tests de la clase Compacto", () => {
   let instance: Compacto;

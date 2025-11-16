@@ -1,0 +1,67 @@
+@startuml name sequencia2
+title Diagrama de Secuencia - Cálculo de Tarifa 
+
+participant Admin as "admin:Admin"
+participant Reserva as "reserva:Reserva"
+participant Calculadora as "calc:CalculadoraTarifa"
+participant Vehiculo as "vehiculo:SUV"
+participant Temporada as "temp:Temporada"
+
+
+Admin -> Reserva: calcularTarifaReserva()
+activate Reserva
+
+
+create participant Calculadora
+Reserva -> Calculadora: new CalculadoraTarifa()
+Reserva -> Calculadora: calcularTarifa(this)
+activate Calculadora
+
+
+Calculadora -> Reserva: getVehiculo()
+activate Reserva
+Reserva --> Calculadora: vehiculo:SUV
+deactivate Reserva
+
+Calculadora -> Reserva: calcularDiasTotales()
+activate Reserva
+Reserva --> Calculadora: dias
+deactivate Reserva
+
+Calculadora -> Reserva: calcularKmRecorridos()
+activate Reserva
+Reserva --> Calculadora: km
+deactivate Reserva
+
+Calculadora -> Reserva: getTemporada()
+activate Reserva
+Reserva --> Calculadora: temp:Temporada
+deactivate Reserva
+
+Calculadora -> Vehiculo: getTarifaBase()
+activate Vehiculo
+Vehiculo --> Calculadora: 80
+deactivate Vehiculo
+
+Calculadora -> Temporada: getPorcentajeTarifa()
+activate Temporada
+Temporada --> Calculadora: 1.0 ' (ej. TemporadaMedia)
+deactivate Temporada
+
+
+Calculadora -> Vehiculo: condicionCargosExtra(km, dias)
+activate Vehiculo
+' El SUV ejecuta su propia lógica (km > 500)
+Vehiculo --> Calculadora: (true)
+deactivate Vehiculo
+
+
+
+Calculadora --> Reserva: montoTotal
+deactivate Calculadora
+
+
+Reserva --> Admin: montoTotal
+deactivate Reserva
+
+@enduml
