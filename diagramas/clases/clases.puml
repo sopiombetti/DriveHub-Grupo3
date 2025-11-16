@@ -35,9 +35,9 @@ class Suv extends Vehiculo{
 }
 
 interface IEstado{
-    alquilar()
-    ponerEnMantenimiento()
-    ponerDisponible()
+    + alquilar()
+    + ponerEnMantenimiento()
+    + ponerDisponible()
 }
 
 class Disponible implements IEstado{
@@ -58,11 +58,13 @@ abstract class Persona{
 }
 
 class Cliente extends Persona{
+    - admin : Admin
+
     + generarSolicitud(vehiculo, fechaInicio, fechaFin)
 }
 
 interface Temporada {
-    getPorcentajeTarifa()
+    + getPorcentajeTarifa()
 }
 
 class TemporadaAlta implements Temporada{
